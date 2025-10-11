@@ -1,0 +1,19 @@
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+}
+
+button {
+  margin-top: 16px;
+  align-self: flex-start;
+}
+
+mat-card {
+  margin: 20px;
+}
