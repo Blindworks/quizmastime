@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx @angular/cli@20:*)",
+      "Bash(npx ng add:*)",
+      "Bash(mv:*)",
+      "Bash(rmdir:*)",
+      "Bash(curl https://start.spring.io/starter.zip -d dependencies=web,data-jpa,mariadb,validation,lombok -d type=maven-project -d language=java -d bootVersion=3.4.1 -d baseDir=quizmastime-backend -d groupId=com.quizmastime -d artifactId=quizmastime-backend -d name=quizmastime-backend -d description=\"Christmas Quiz Backend\" -d packageName=com.quizmastime.backend -d packaging=jar -d javaVersion=21 -o backend.zip)",
+      "Bash(unzip:*)",
+      "Bash(rm:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(npx ng generate component:*)",
+      "Bash(npx ng generate service:*)",
+      "Bash(npx ng generate interface:*)",
+      "Bash(cat:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
