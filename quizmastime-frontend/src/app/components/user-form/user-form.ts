@@ -48,15 +48,23 @@ export class UserForm {
         birthDate: this.formatDate(this.userForm.value.birthDate)
       };
 
+      console.log('Sending user to backend:', user);
+
       this.userService.createUser(user).subscribe({
-        next: () => {
+        next: (response) => {
+          console.log('User created successfully:', response);
           this.userForm.reset();
           this.userCreated.emit();
         },
         error: (error) => {
           console.error('Error creating user:', error);
+          console.error('Error details:', error.error);
+          console.error('Error status:', error.status);
+          alert(`Error creating user: ${error.message}`);
         }
       });
+    } else {
+      console.log('Form is invalid:', this.userForm.errors);
     }
   }
 
