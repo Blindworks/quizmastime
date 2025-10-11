@@ -42,11 +42,19 @@ export class Admin {
     if (this.questionList) {
       this.questionList.loadQuestions();
     }
+    // Reload user-question list to show the new question in assignments
+    if (this.userQuestionList) {
+      this.userQuestionList.loadUserQuestions();
+    }
   }
 
   onQuestionUpdated(): void {
     if (this.questionList) {
       this.questionList.loadQuestions();
+    }
+    // Reload user-question list to show updated question text
+    if (this.userQuestionList) {
+      this.userQuestionList.loadUserQuestions();
     }
     this.questionToEdit = null;
   }
