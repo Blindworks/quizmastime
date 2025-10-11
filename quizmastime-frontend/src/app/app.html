@@ -1,5 +1,11 @@
 <router-outlet />
 
-<button mat-mini-fab class="admin-fab" routerLink="/admin" aria-label="Admin">
-  <mat-icon>settings</mat-icon>
-</button>
+@if (!isAdminRoute()) {
+  <button mat-mini-fab class="admin-fab" routerLink="/admin" aria-label="Admin">
+    <mat-icon>settings</mat-icon>
+  </button>
+} @else {
+  <button mat-mini-fab class="admin-fab home-fab" routerLink="/" aria-label="Home">
+    <mat-icon>home</mat-icon>
+  </button>
+}
