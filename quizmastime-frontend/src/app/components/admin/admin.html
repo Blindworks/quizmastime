@@ -22,7 +22,8 @@
 
     <mat-tab label="User Questions">
       <div class="tab-content">
-        <p>User question assignments coming soon...</p>
+        <app-user-question-form (userQuestionCreated)="onUserQuestionCreated()"></app-user-question-form>
+        <app-user-question-list></app-user-question-list>
       </div>
     </mat-tab>
   </mat-tab-group>

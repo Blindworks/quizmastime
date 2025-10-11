@@ -5,6 +5,8 @@ import { UserForm } from '../user-form/user-form';
 import { UserList } from '../user-list/user-list';
 import { QuestionForm } from '../question-form/question-form';
 import { QuestionList } from '../question-list/question-list';
+import { UserQuestionForm } from '../user-question-form/user-question-form';
+import { UserQuestionList } from '../user-question-list/user-question-list';
 import { Question } from '../../models/question';
 
 @Component({
@@ -15,7 +17,9 @@ import { Question } from '../../models/question';
     UserForm,
     UserList,
     QuestionForm,
-    QuestionList
+    QuestionList,
+    UserQuestionForm,
+    UserQuestionList
   ],
   templateUrl: './admin.html',
   styleUrl: './admin.scss'
@@ -24,6 +28,7 @@ export class Admin {
   @ViewChild(UserList) userList!: UserList;
   @ViewChild(QuestionList) questionList!: QuestionList;
   @ViewChild(QuestionForm) questionForm!: QuestionForm;
+  @ViewChild(UserQuestionList) userQuestionList!: UserQuestionList;
 
   questionToEdit: Question | null = null;
 
@@ -52,5 +57,11 @@ export class Admin {
     setTimeout(() => {
       this.questionToEdit = { ...question };
     }, 0);
+  }
+
+  onUserQuestionCreated(): void {
+    if (this.userQuestionList) {
+      this.userQuestionList.loadUserQuestions();
+    }
   }
 }
