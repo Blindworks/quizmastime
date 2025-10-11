@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,6 +22,7 @@ import { Question } from '../../models/question';
 export class QuestionList implements OnInit {
   questions: Question[] = [];
   displayedColumns: string[] = ['questionText', 'answer1', 'answer2', 'answer3', 'correctAnswer', 'actions'];
+  @Output() editQuestion = new EventEmitter<Question>();
 
   constructor(private questionService: QuestionService) {}
 
@@ -51,6 +52,10 @@ export class QuestionList implements OnInit {
         }
       });
     }
+  }
+
+  onEditQuestion(question: Question): void {
+    this.editQuestion.emit(question);
   }
 
   getCorrectAnswerText(question: Question): string {

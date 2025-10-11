@@ -5,6 +5,7 @@ import { UserForm } from '../user-form/user-form';
 import { UserList } from '../user-list/user-list';
 import { QuestionForm } from '../question-form/question-form';
 import { QuestionList } from '../question-list/question-list';
+import { Question } from '../../models/question';
 
 @Component({
   selector: 'app-admin',
@@ -22,6 +23,9 @@ import { QuestionList } from '../question-list/question-list';
 export class Admin {
   @ViewChild(UserList) userList!: UserList;
   @ViewChild(QuestionList) questionList!: QuestionList;
+  @ViewChild(QuestionForm) questionForm!: QuestionForm;
+
+  questionToEdit: Question | null = null;
 
   onUserCreated(): void {
     if (this.userList) {
@@ -33,5 +37,20 @@ export class Admin {
     if (this.questionList) {
       this.questionList.loadQuestions();
     }
+  }
+
+  onQuestionUpdated(): void {
+    if (this.questionList) {
+      this.questionList.loadQuestions();
+    }
+    this.questionToEdit = null;
+  }
+
+  onEditQuestion(question: Question): void {
+    // Reset to null first to trigger ngOnChanges
+    this.questionToEdit = null;
+    setTimeout(() => {
+      this.questionToEdit = { ...question };
+    }, 0);
   }
 }

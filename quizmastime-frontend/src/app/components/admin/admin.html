@@ -11,8 +11,12 @@
 
     <mat-tab label="Question Management">
       <div class="tab-content">
-        <app-question-form (questionCreated)="onQuestionCreated()"></app-question-form>
-        <app-question-list></app-question-list>
+        <app-question-form
+          [questionToEdit]="questionToEdit"
+          (questionCreated)="onQuestionCreated()"
+          (questionUpdated)="onQuestionUpdated()">
+        </app-question-form>
+        <app-question-list (editQuestion)="onEditQuestion($event)"></app-question-list>
       </div>
     </mat-tab>
 

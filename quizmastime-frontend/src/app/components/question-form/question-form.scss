@@ -26,9 +26,14 @@ form {
   gap: 8px;
 }
 
-button {
+.button-group {
+  display: flex;
+  gap: 16px;
   margin-top: 16px;
-  align-self: flex-start;
+
+  button {
+    margin: 0;
+  }
 }
 
 mat-card {
