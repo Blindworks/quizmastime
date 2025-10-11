@@ -1,0 +1,36 @@
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+}
+
+.correct-answer-section {
+  margin: 16px 0;
+}
+
+.correct-answer-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.correct-answer-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+button {
+  margin-top: 16px;
+  align-self: flex-start;
+}
+
+mat-card {
+  margin: 20px;
+}

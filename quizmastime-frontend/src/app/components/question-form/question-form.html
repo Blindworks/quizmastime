@@ -1,0 +1,56 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Create New Question</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="questionForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Question Text</mat-label>
+        <textarea matInput formControlName="questionText" rows="3" required></textarea>
+        <mat-error *ngIf="questionForm.get('questionText')?.hasError('required')">
+          Question text is required
+        </mat-error>
+        <mat-error *ngIf="questionForm.get('questionText')?.hasError('minlength')">
+          Question must be at least 5 characters
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Answer 1</mat-label>
+        <input matInput formControlName="answer1" required>
+        <mat-error *ngIf="questionForm.get('answer1')?.hasError('required')">
+          Answer 1 is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Answer 2</mat-label>
+        <input matInput formControlName="answer2" required>
+        <mat-error *ngIf="questionForm.get('answer2')?.hasError('required')">
+          Answer 2 is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Answer 3</mat-label>
+        <input matInput formControlName="answer3" required>
+        <mat-error *ngIf="questionForm.get('answer3')?.hasError('required')">
+          Answer 3 is required
+        </mat-error>
+      </mat-form-field>
+
+      <div class="correct-answer-section">
+        <label class="correct-answer-label">Correct Answer:</label>
+        <mat-radio-group formControlName="correctAnswer" class="correct-answer-group">
+          <mat-radio-button [value]="1">Answer 1</mat-radio-button>
+          <mat-radio-button [value]="2">Answer 2</mat-radio-button>
+          <mat-radio-button [value]="3">Answer 3</mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      <button mat-raised-button color="primary" type="submit" [disabled]="!questionForm.valid">
+        Create Question
+      </button>
+    </form>
+  </mat-card-content>
+</mat-card>
