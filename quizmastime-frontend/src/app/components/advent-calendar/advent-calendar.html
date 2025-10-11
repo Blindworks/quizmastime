@@ -1,0 +1,55 @@
+<div class="calendar-container">
+  <!-- Header with player info -->
+  <header class="calendar-header" *ngIf="currentPlayer">
+    <div class="player-info">
+      <div class="player-avatar">
+        {{ currentPlayer.name.charAt(0).toUpperCase() }}
+      </div>
+      <div class="player-details">
+        <h2>{{ currentPlayer.name }}</h2>
+        <p class="progress">{{ currentPlayer.correctAnswers }} / 24 Fragen richtig</p>
+      </div>
+    </div>
+    <button mat-icon-button (click)="logout()" class="logout-button" matTooltip="Spieler wechseln">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </header>
+
+  <!-- Main calendar area -->
+  <div class="calendar-content">
+    <div class="calendar-title">
+      <h1>Adventskalender 2024</h1>
+      <p class="subtitle">Öffne jeden Tag ein neues Türchen!</p>
+    </div>
+
+    <!-- Calendar grid -->
+    <div class="calendar-grid">
+      <div
+        *ngFor="let calendarDay of calendarDays"
+        [ngClass]="getDayClasses(calendarDay)"
+        (click)="onDayClick(calendarDay)"
+        [matTooltip]="calendarDay.isUnlocked ? 'Türchen öffnen' : 'Noch nicht verfügbar'"
+        [matTooltipDisabled]="!calendarDay.isUnlocked && !calendarDay.isCompleted">
+
+        <div class="day-number">{{ calendarDay.day }}</div>
+
+        <div class="day-icon" *ngIf="calendarDay.isCompleted">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+
+        <div class="day-icon lock-icon" *ngIf="!calendarDay.isUnlocked">
+          <mat-icon>lock</mat-icon>
+        </div>
+
+        <div class="day-decoration" *ngIf="calendarDay.day === 24">
+          <mat-icon>card_giftcard</mat-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer decoration area -->
+  <div class="calendar-footer">
+    <!-- Platz für weihnachtliche Dekorationsgrafiken -->
+  </div>
+</div>
