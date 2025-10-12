@@ -215,7 +215,7 @@ public class UserQuestionService {
         // Build response
         return AnswerResponseDTO.builder()
                 .correct(isCorrect)
-                .correctAnswer(question.getCorrectAnswer())
+                .correctAnswer(isCorrect ? question.getCorrectAnswer() : null) // Nur bei richtiger Antwort zeigen
                 .userQuestion(mapToDTO(savedUserQuestion))
                 .message(isCorrect ? "Richtig! Gut gemacht!" : "Leider falsch. Versuch es nochmal!")
                 .build();

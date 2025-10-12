@@ -137,14 +137,17 @@ export class QuestionView implements OnInit {
   getAnswerClass(answer: { text: string, index: number }): string[] {
     const classes = ['answer-option'];
 
-    if (this.selectedAnswer === answer.index) {
+    if (this.selectedAnswer === answer.index && !this.isAnswered) {
       classes.push('selected');
     }
 
     if (this.isAnswered) {
-      if (answer.index === this.question?.correctAnswer) {
+      // Nur bei richtiger Antwort die korrekte Antwort grün markieren
+      if (this.isCorrect && answer.index === this.question?.correctAnswer) {
         classes.push('correct');
-      } else if (this.selectedAnswer === answer.index) {
+      }
+      // Bei falscher Antwort nur die gewählte falsche Antwort rot markieren
+      else if (!this.isCorrect && this.selectedAnswer === answer.index) {
         classes.push('incorrect');
       }
     }

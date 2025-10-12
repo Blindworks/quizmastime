@@ -40,8 +40,10 @@
         <div class="answer-content">
           <span class="answer-text">{{ answer.text }}</span>
           <div class="answer-icon" *ngIf="isAnswered">
-            <mat-icon *ngIf="answer.index === question.correctAnswer">check_circle</mat-icon>
-            <mat-icon *ngIf="selectedAnswer === answer.index && answer.index !== question.correctAnswer">cancel</mat-icon>
+            <!-- Nur bei richtiger Antwort die korrekte Antwort anzeigen -->
+            <mat-icon *ngIf="isCorrect && answer.index === question.correctAnswer">check_circle</mat-icon>
+            <!-- Bei falscher Antwort nur die gewählte falsche Antwort markieren -->
+            <mat-icon *ngIf="!isCorrect && selectedAnswer === answer.index">cancel</mat-icon>
           </div>
         </div>
       </div>
