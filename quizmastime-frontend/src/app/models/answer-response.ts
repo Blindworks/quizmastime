@@ -3,4 +3,7 @@ export interface AnswerResponse {
   correctAnswer: number;
   userQuestion: any; // UserQuestion DTO
   message: string;
+  lockedOut?: boolean;
+  lockoutUntil?: string;
+  lockoutRemainingSeconds?: number;
 }

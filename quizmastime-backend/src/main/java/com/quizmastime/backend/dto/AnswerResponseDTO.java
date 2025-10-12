@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,4 +17,7 @@ public class AnswerResponseDTO {
     private Integer correctAnswer;
     private UserQuestionDTO userQuestion;
     private String message;
+    private boolean lockedOut;
+    private LocalDateTime lockoutUntil;
+    private Long lockoutRemainingSeconds;
 }

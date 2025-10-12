@@ -32,6 +32,9 @@ export class QuestionView implements OnInit {
   isCorrect: boolean = false;
   loading: boolean = true;
   answers: { text: string, index: number }[] = [];
+  isLockedOut: boolean = false;
+  lockoutMessage: string = '';
+  lockoutRemainingMinutes: number = 0;
 
   constructor(
     private questionService: QuestionService,
@@ -68,6 +71,8 @@ export class QuestionView implements OnInit {
         if (questions && questions.length >= this.day) {
           this.question = questions[this.day - 1];
           this.prepareAnswers();
+          // Check lockout status after question is loaded
+          this.checkLockoutStatus();
         } else {
           console.error('Keine Frage für Tag gefunden:', this.day);
         }
@@ -76,6 +81,35 @@ export class QuestionView implements OnInit {
       error: (error) => {
         console.error('Fehler beim Laden der Frage:', error);
         this.loading = false;
+      }
+    });
+  }
+
+  checkLockoutStatus(): void {
+    if (!this.currentUser || !this.question) return;
+
+    this.userQuestionService.checkLockoutStatus(this.currentUser.id!, this.question.id!).subscribe({
+      next: (response) => {
+        console.log('Lockout-Status beim Laden:', response);
+
+        // Check if already answered correctly
+        if (response.correct && response.userQuestion?.correctAnswerDate) {
+          this.isAnswered = true;
+          this.isCorrect = true;
+          return;
+        }
+
+        // Check if locked out
+        if (response.lockedOut) {
+          this.isLockedOut = true;
+          this.lockoutMessage = response.message;
+          this.lockoutRemainingMinutes = Math.ceil((response.lockoutRemainingSeconds || 0) / 60);
+          console.log('Türchen ist gesperrt für', this.lockoutRemainingMinutes, 'Minuten');
+        }
+      },
+      error: (error) => {
+        console.error('Fehler beim Prüfen des Lockout-Status:', error);
+        // Continue anyway - user can try to answer
       }
     });
   }
@@ -101,7 +135,7 @@ export class QuestionView implements OnInit {
   }
 
   selectAnswer(answerIndex: number): void {
-    if (this.isAnswered) return;
+    if (this.isAnswered || this.isLockedOut) return;
     this.selectedAnswer = answerIndex;
     // Direkt absenden nach Auswahl
     this.submitAnswer();
@@ -119,9 +153,28 @@ export class QuestionView implements OnInit {
 
     this.userQuestionService.submitAnswer(submission).subscribe({
       next: (response) => {
+        console.log('Antwort vom Backend:', response);
+
+        // Check for lockout (when trying to answer while already locked out)
+        if (response.lockedOut) {
+          this.isLockedOut = true;
+          this.isAnswered = false; // Not answered, just locked out
+          this.lockoutMessage = response.message;
+          this.lockoutRemainingMinutes = Math.ceil((response.lockoutRemainingSeconds || 0) / 60);
+          return;
+        }
+
+        // Answer was processed
         this.isAnswered = true;
         this.isCorrect = response.correct;
-        console.log('Antwort vom Backend:', response);
+
+        // If wrong answer, show that lockout will now apply
+        if (!response.correct && response.lockoutRemainingSeconds) {
+          this.lockoutMessage = response.message;
+          this.lockoutRemainingMinutes = Math.ceil(response.lockoutRemainingSeconds / 60);
+          // Set lockout state for next attempt
+          this.isLockedOut = false; // Keep false to show wrong answer message first
+        }
       },
       error: (error) => {
         console.error('Fehler beim Senden der Antwort:', error);

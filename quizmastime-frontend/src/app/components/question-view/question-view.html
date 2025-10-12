@@ -49,6 +49,30 @@
       </div>
     </div>
 
+    <!-- Lockout Message -->
+    <div class="result-container" *ngIf="isLockedOut">
+      <mat-card class="result-card lockout">
+        <mat-card-content>
+          <div class="result-icon">
+            <mat-icon>lock_clock</mat-icon>
+          </div>
+          <h3>Türchen gesperrt</h3>
+          <p>{{ lockoutMessage }}</p>
+          <div class="lockout-timer">
+            <mat-icon>timer</mat-icon>
+            <span>Noch {{ lockoutRemainingMinutes }} Minuten</span>
+          </div>
+          <button
+            mat-raised-button
+            color="accent"
+            class="back-to-calendar-button"
+            (click)="backToCalendar()">
+            Zurück zum Kalender
+          </button>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
     <!-- Result Message -->
     <div class="result-container" *ngIf="isAnswered">
       <mat-card [ngClass]="isCorrect ? 'result-card correct' : 'result-card incorrect'">
@@ -61,7 +85,7 @@
             Du hast die Frage richtig beantwortet! Das Türchen ist nun geöffnet.
           </p>
           <p *ngIf="!isCorrect">
-            Das war nicht ganz richtig. Versuch es beim nächsten Mal noch einmal!
+            {{ lockoutMessage || 'Das war nicht ganz richtig. Versuch es beim nächsten Mal noch einmal!' }}
           </p>
           <button
             mat-raised-button

@@ -27,6 +27,10 @@ export class UserQuestionService {
     return this.http.post<AnswerResponse>(`${this.apiUrl}/submit-answer`, submission);
   }
 
+  checkLockoutStatus(userId: number, questionId: number): Observable<AnswerResponse> {
+    return this.http.get<AnswerResponse>(`${this.apiUrl}/lockout-status/user/${userId}/question/${questionId}`);
+  }
+
   getUserQuestionsByUserId(userId: number): Observable<UserQuestion[]> {
     return this.http.get<UserQuestion[]>(`${this.apiUrl}/user/${userId}`);
   }

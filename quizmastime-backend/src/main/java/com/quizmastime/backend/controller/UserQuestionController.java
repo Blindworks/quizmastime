@@ -128,4 +128,17 @@ public class UserQuestionController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
+
+    @GetMapping("/lockout-status/user/{userId}/question/{questionId}")
+    public ResponseEntity<AnswerResponseDTO> getLockoutStatus(
+            @PathVariable Long userId, @PathVariable Long questionId) {
+        log.info("GET /api/user-questions/lockout-status/user/{}/question/{} - Checking lockout status", userId, questionId);
+        try {
+            AnswerResponseDTO response = userQuestionService.checkLockoutStatus(userId, questionId);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            log.error("Error checking lockout status: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 }
