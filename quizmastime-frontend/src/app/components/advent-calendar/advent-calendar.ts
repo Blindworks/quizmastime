@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { User } from '../../models/user';
+import { UserQuestionService, UserQuestion } from '../../services/user-question.service';
 
 interface CalendarDay {
   day: number;
@@ -29,9 +30,11 @@ export class AdventCalendar implements OnInit {
   currentUser: User | null = null;
   calendarDays: CalendarDay[] = [];
   currentDate: Date = new Date();
+  userQuestions: UserQuestion[] = [];
 
   constructor(
-    private router: Router
+    private router: Router,
+    private userQuestionService: UserQuestionService
   ) {}
 
   ngOnInit(): void {
@@ -46,7 +49,25 @@ export class AdventCalendar implements OnInit {
       return;
     }
 
-    this.initializeCalendar();
+    this.loadUserQuestions();
+  }
+
+  loadUserQuestions(): void {
+    if (!this.currentUser || !this.currentUser.id) {
+      this.initializeCalendar();
+      return;
+    }
+
+    this.userQuestionService.getUserQuestionsByUserId(this.currentUser.id).subscribe({
+      next: (userQuestions) => {
+        this.userQuestions = userQuestions;
+        this.initializeCalendar();
+      },
+      error: (error) => {
+        console.error('Fehler beim Laden der User-Fragen:', error);
+        this.initializeCalendar();
+      }
+    });
   }
 
   initializeCalendar(): void {
@@ -61,10 +82,14 @@ export class AdventCalendar implements OnInit {
       // Außerhalb Dezember (für Tests): Mindestens Tag 1 freischalten
       const isUnlocked = isDecember ? (day <= today) : (day === 1);
 
+      // Check if this day has been answered correctly
+      const userQuestion = this.userQuestions.find(uq => uq.day === day);
+      const isCompleted = userQuestion?.correctAnswerDate != null;
+
       this.calendarDays.push({
         day: day,
         isUnlocked: isUnlocked,
-        isCompleted: false, // TODO: Load from backend
+        isCompleted: isCompleted,
         isToday: isDecember && day === today,
         iconPath: `/assets/icons/day-${day}.png`
       });
