@@ -144,18 +144,15 @@ public class UserQuestionService {
         userQuestion.setQuestion(question);
         userQuestion.setDay(userQuestionDTO.getDay());
 
-        if (userQuestionDTO.getWrongAttempts() != null) {
-            userQuestion.setWrongAttempts(userQuestionDTO.getWrongAttempts());
-        }
-        if (userQuestionDTO.getLastWrongAnswer() != null) {
-            userQuestion.setLastWrongAnswer(userQuestionDTO.getLastWrongAnswer());
-        }
-        if (userQuestionDTO.getCorrectAnswerDate() != null) {
-            userQuestion.setCorrectAnswerDate(userQuestionDTO.getCorrectAnswerDate());
-        }
+        // Always update these fields, even if null (to allow clearing)
+        userQuestion.setWrongAttempts(userQuestionDTO.getWrongAttempts() != null ? userQuestionDTO.getWrongAttempts() : 0);
+        userQuestion.setLastWrongAnswer(userQuestionDTO.getLastWrongAnswer());
+        userQuestion.setCorrectAnswerDate(userQuestionDTO.getCorrectAnswerDate());
 
         UserQuestion updatedUserQuestion = userQuestionRepository.save(userQuestion);
-        log.info("User question updated successfully with id: {}", updatedUserQuestion.getId());
+        log.info("User question updated successfully with id: {}. WrongAttempts: {}, LastWrongAnswer: {}, CorrectAnswerDate: {}",
+                updatedUserQuestion.getId(), updatedUserQuestion.getWrongAttempts(),
+                updatedUserQuestion.getLastWrongAnswer(), updatedUserQuestion.getCorrectAnswerDate());
 
         return mapToDTO(updatedUserQuestion);
     }

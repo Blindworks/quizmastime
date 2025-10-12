@@ -11,6 +11,7 @@ import { UserQuestion } from '../../models/user-question';
 import { User } from '../../models/user';
 import { Question } from '../../models/question';
 import { forkJoin } from 'rxjs';
+import { UserQuestionForm } from '../user-question-form/user-question-form';
 
 interface UserQuestionDisplay extends UserQuestion {
   userName?: string;
@@ -26,7 +27,8 @@ interface UserQuestionDisplay extends UserQuestion {
     MatTableModule,
     MatButtonModule,
     MatIconModule,
-    MatCardModule
+    MatCardModule,
+    UserQuestionForm
   ],
   templateUrl: './user-question-list.html',
   styleUrl: './user-question-list.scss'
@@ -35,6 +37,8 @@ export class UserQuestionList implements OnInit {
   userQuestions: UserQuestionDisplay[] = [];
   displayedColumns: string[] = ['userName', 'questionText', 'day', 'wrongAttempts', 'lastWrongAnswer', 'lockoutStatus', 'correctAnswerDate', 'actions'];
   lockoutDurationMinutes: number = 30; // Should match backend configuration
+  editingUserQuestion: UserQuestion | null = null;
+  showEditForm: boolean = false;
 
   constructor(
     private userQuestionService: UserQuestionService,
@@ -166,5 +170,21 @@ export class UserQuestionList implements OnInit {
     }
 
     return '-';
+  }
+
+  editUserQuestion(uq: UserQuestion): void {
+    this.editingUserQuestion = { ...uq };
+    this.showEditForm = true;
+  }
+
+  onUserQuestionUpdated(): void {
+    this.showEditForm = false;
+    this.editingUserQuestion = null;
+    this.loadUserQuestions();
+  }
+
+  onEditCancelled(): void {
+    this.showEditForm = false;
+    this.editingUserQuestion = null;
   }
 }

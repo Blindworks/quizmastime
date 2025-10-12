@@ -1,12 +1,12 @@
 <mat-card>
   <mat-card-header>
-    <mat-card-title>Assign Question to User</mat-card-title>
+    <mat-card-title>{{ editMode ? 'Edit User Question' : 'Assign Question to User' }}</mat-card-title>
   </mat-card-header>
   <mat-card-content>
     <form [formGroup]="userQuestionForm" (ngSubmit)="onSubmit()">
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>User</mat-label>
-        <mat-select formControlName="userId" required>
+        <mat-select formControlName="userId" required [disabled]="editMode">
           <mat-option *ngFor="let user of users" [value]="user.id">
             {{ user.firstName }} {{ user.lastName }}
           </mat-option>
@@ -18,7 +18,7 @@
 
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Question</mat-label>
-        <mat-select formControlName="questionId" required>
+        <mat-select formControlName="questionId" required [disabled]="editMode">
           <mat-option *ngFor="let question of questions" [value]="question.id">
             {{ question.questionText }}
           </mat-option>
@@ -40,9 +40,35 @@
         </mat-error>
       </mat-form-field>
 
-      <button mat-raised-button color="primary" type="submit" [disabled]="!userQuestionForm.valid">
-        Assign Question
-      </button>
+      <div *ngIf="editMode" class="edit-fields">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Wrong Attempts</mat-label>
+          <input matInput type="number" formControlName="wrongAttempts" min="0">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Last Wrong Answer</mat-label>
+          <input matInput type="datetime-local" formControlName="lastWrongAnswer">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Correct Answer Date</mat-label>
+          <input matInput type="datetime-local" formControlName="correctAnswerDate">
+        </mat-form-field>
+
+        <button mat-raised-button type="button" color="warn" (click)="clearWrongAnswer()" class="clear-button">
+          Clear Lockout
+        </button>
+      </div>
+
+      <div class="button-group">
+        <button mat-raised-button color="primary" type="submit" [disabled]="!userQuestionForm.valid">
+          {{ editMode ? 'Update' : 'Assign Question' }}
+        </button>
+        <button mat-raised-button type="button" (click)="onCancel()" *ngIf="editMode">
+          Cancel
+        </button>
+      </div>
     </form>
   </mat-card-content>
 </mat-card>

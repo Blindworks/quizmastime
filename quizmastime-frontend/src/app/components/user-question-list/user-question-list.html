@@ -49,7 +49,10 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Actions</th>
         <td mat-cell *matCellDef="let uq">
-          <button mat-icon-button color="warn" (click)="deleteUserQuestion(uq.id)">
+          <button mat-icon-button color="primary" (click)="editUserQuestion(uq)" title="Edit">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteUserQuestion(uq.id)" title="Delete">
             <mat-icon>delete</mat-icon>
           </button>
         </td>
@@ -60,3 +63,15 @@
     </table>
   </mat-card-content>
 </mat-card>
+
+<!-- Edit Form Dialog -->
+<div class="edit-overlay" *ngIf="showEditForm" (click)="onEditCancelled()">
+  <div class="edit-dialog" (click)="$event.stopPropagation()">
+    <app-user-question-form
+      [editMode]="true"
+      [userQuestion]="editingUserQuestion"
+      (userQuestionUpdated)="onUserQuestionUpdated()"
+      (cancelled)="onEditCancelled()">
+    </app-user-question-form>
+  </div>
+</div>

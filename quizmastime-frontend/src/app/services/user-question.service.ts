@@ -34,4 +34,16 @@ export class UserQuestionService {
   getUserQuestionsByUserId(userId: number): Observable<UserQuestion[]> {
     return this.http.get<UserQuestion[]>(`${this.apiUrl}/user/${userId}`);
   }
+
+  assignQuestionToUser(userQuestion: UserQuestion): Observable<UserQuestion> {
+    return this.http.post<UserQuestion>(this.apiUrl, userQuestion);
+  }
+
+  updateUserQuestion(id: number, userQuestion: UserQuestion): Observable<UserQuestion> {
+    return this.http.put<UserQuestion>(`${this.apiUrl}/${id}`, userQuestion);
+  }
+
+  deleteUserQuestion(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }
