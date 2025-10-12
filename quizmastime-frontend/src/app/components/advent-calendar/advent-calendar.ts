@@ -4,8 +4,7 @@ import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { PlayerService } from '../../services/player';
-import { Player } from '../../models/player.model';
+import { User } from '../../models/user';
 
 interface CalendarDay {
   day: number;
@@ -26,19 +25,22 @@ interface CalendarDay {
   styleUrl: './advent-calendar.scss'
 })
 export class AdventCalendar implements OnInit {
-  currentPlayer: Player | null = null;
+  currentUser: User | null = null;
   calendarDays: CalendarDay[] = [];
   currentDate: Date = new Date();
 
   constructor(
-    private playerService: PlayerService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.currentPlayer = this.playerService.getCurrentPlayer();
+    // Lade den aktuellen User aus dem localStorage
+    const storedUser = localStorage.getItem('currentUser');
+    if (storedUser) {
+      this.currentUser = JSON.parse(storedUser);
+    }
 
-    if (!this.currentPlayer) {
+    if (!this.currentUser) {
       this.router.navigate(['/']);
       return;
     }
@@ -88,7 +90,7 @@ export class AdventCalendar implements OnInit {
   }
 
   logout(): void {
-    this.playerService.clearCurrentPlayer();
+    localStorage.removeItem('currentUser');
     this.router.navigate(['/']);
   }
 }

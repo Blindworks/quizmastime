@@ -7,50 +7,74 @@
   <div class="content-wrapper">
     <h2>Wer spielt heute?</h2>
 
-    <!-- Existing Players Grid -->
-    <div class="players-grid" *ngIf="!isCreatingNewPlayer && players.length > 0">
+    <!-- Existing Users Grid -->
+    <div class="players-grid" *ngIf="!isCreatingNewUser && users.length > 0">
       <div
         class="player-card"
-        *ngFor="let player of players"
-        [class.selected]="selectedPlayer?.id === player.id"
-        (click)="selectExistingPlayer(player)">
+        *ngFor="let user of users"
+        [class.selected]="selectedUser?.id === user.id"
+        (click)="selectExistingUser(user)">
         <div class="player-avatar">
           <!-- Platzhalter für Avatar-Grafik -->
-          <span>{{ player.name.charAt(0).toUpperCase() }}</span>
+          <span>{{ user.firstName.charAt(0).toUpperCase() }}</span>
         </div>
-        <div class="player-name">{{ player.name }}</div>
-        <div class="player-progress">
-          {{ player.correctAnswers }} / 24
-        </div>
+        <div class="player-name">{{ user.firstName }} {{ user.lastName }}</div>
       </div>
 
-      <!-- New Player Card -->
-      <div class="player-card new-player" (click)="showNewPlayerForm()">
+      <!-- New User Card -->
+      <div class="player-card new-player" (click)="showNewUserForm()">
         <div class="player-avatar">
           <span>+</span>
         </div>
-        <div class="player-name">Neuer Spieler</div>
+        <div class="player-name">Neuer Benutzer</div>
       </div>
     </div>
 
-    <!-- New Player Form -->
-    <div class="new-player-form" *ngIf="isCreatingNewPlayer || players.length === 0">
+    <!-- New User Form -->
+    <div class="new-player-form" *ngIf="isCreatingNewUser || users.length === 0">
       <mat-card>
         <mat-card-content>
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Dein Name</mat-label>
+            <mat-label>Vorname</mat-label>
             <input
               matInput
-              [(ngModel)]="newPlayerName"
-              placeholder="Gib deinen Namen ein"
-              (keyup.enter)="createNewPlayer()">
+              [(ngModel)]="newUserFirstName"
+              placeholder="Gib deinen Vornamen ein">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nachname</mat-label>
+            <input
+              matInput
+              [(ngModel)]="newUserLastName"
+              placeholder="Gib deinen Nachnamen ein">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Geburtsdatum</mat-label>
+            <input
+              matInput
+              type="date"
+              [(ngModel)]="newUserBirthDate"
+              placeholder="Wähle dein Geburtsdatum">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>E-Mail</mat-label>
+            <input
+              matInput
+              type="email"
+              [(ngModel)]="newUserEmail"
+              placeholder="Gib deine E-Mail-Adresse ein"
+              (keyup.enter)="createNewUser()">
           </mat-form-field>
 
           <div class="form-actions">
-            <button mat-raised-button color="primary" (click)="createNewPlayer()" [disabled]="!newPlayerName.trim()">
+            <button mat-raised-button color="primary" (click)="createNewUser()"
+              [disabled]="!newUserFirstName.trim() || !newUserLastName.trim() || !newUserBirthDate || !newUserEmail.trim()">
               Spielen!
             </button>
-            <button mat-button (click)="isCreatingNewPlayer = false" *ngIf="players.length > 0">
+            <button mat-button (click)="isCreatingNewUser = false" *ngIf="users.length > 0">
               Zurück
             </button>
           </div>
@@ -58,11 +82,5 @@
       </mat-card>
     </div>
 
-    <!-- Start Button for Existing Player -->
-    <div class="start-button-container" *ngIf="selectedPlayer && !isCreatingNewPlayer">
-      <button mat-raised-button color="primary" class="start-button" (click)="startGame()">
-        Los geht's!
-      </button>
-    </div>
   </div>
 </div>

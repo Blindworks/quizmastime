@@ -13,7 +13,9 @@
       "Bash(npx ng generate component:*)",
       "Bash(npx ng generate service:*)",
       "Bash(npx ng generate interface:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(./mvnw spring-boot:run:*)",
+      "Bash(npm start)"
     ],
     "deny": [],
     "ask": []

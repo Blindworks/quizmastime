@@ -1,16 +1,15 @@
 <div class="calendar-container">
   <!-- Header with player info -->
-  <header class="calendar-header" *ngIf="currentPlayer">
+  <header class="calendar-header" *ngIf="currentUser">
     <div class="player-info">
       <div class="player-avatar">
-        {{ currentPlayer.name.charAt(0).toUpperCase() }}
+        {{ currentUser.firstName.charAt(0).toUpperCase() }}
       </div>
       <div class="player-details">
-        <h2>{{ currentPlayer.name }}</h2>
-        <p class="progress">{{ currentPlayer.correctAnswers }} / 24 Fragen richtig</p>
+        <h2>{{ currentUser.firstName }} {{ currentUser.lastName }}</h2>
       </div>
     </div>
-    <button mat-icon-button (click)="logout()" class="logout-button" matTooltip="Spieler wechseln">
+    <button mat-icon-button (click)="logout()" class="logout-button" matTooltip="Benutzer wechseln">
       <mat-icon>logout</mat-icon>
     </button>
   </header>

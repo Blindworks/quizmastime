@@ -7,8 +7,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
-import { PlayerService } from '../../services/player';
-import { Player } from '../../models/player.model';
+import { UserService } from '../../services/user';
+import { User } from '../../models/user';
 
 @Component({
   selector: 'app-player-selection',
@@ -25,78 +25,80 @@ import { Player } from '../../models/player.model';
   styleUrl: './player-selection.scss'
 })
 export class PlayerSelection implements OnInit {
-  players: Player[] = [];
-  selectedPlayer: Player | null = null;
-  newPlayerName: string = '';
-  isCreatingNewPlayer: boolean = false;
+  users: User[] = [];
+  selectedUser: User | null = null;
+  newUserFirstName: string = '';
+  newUserLastName: string = '';
+  newUserBirthDate: string = '';
+  newUserEmail: string = '';
+  isCreatingNewUser: boolean = false;
 
   constructor(
-    private playerService: PlayerService,
+    private userService: UserService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.loadPlayers();
+    this.loadUsers();
   }
 
-  loadPlayers(): void {
-    this.playerService.getAllPlayers().subscribe({
-      next: (players) => {
-        this.players = players;
+  loadUsers(): void {
+    this.userService.getAllUsers().subscribe({
+      next: (users) => {
+        this.users = users;
       },
       error: (error) => {
-        console.warn('Backend nicht erreichbar, verwende Mock-Daten:', error);
-        // Fallback: Mock-Daten wenn Backend nicht läuft
-        this.players = [
-          { id: 1, name: 'Anna', correctAnswers: 5, totalAnswers: 8 },
-          { id: 2, name: 'Ben', correctAnswers: 3, totalAnswers: 5 },
-          { id: 3, name: 'Clara', correctAnswers: 10, totalAnswers: 12 },
-          { id: 4, name: 'David', correctAnswers: 0, totalAnswers: 0 }
-        ];
+        console.error('Fehler beim Laden der Benutzer:', error);
+        this.users = [];
       }
     });
   }
 
-  selectExistingPlayer(player: Player): void {
-    this.selectedPlayer = player;
-    this.isCreatingNewPlayer = false;
+  selectExistingUser(user: User): void {
+    this.selectedUser = user;
+    this.isCreatingNewUser = false;
+    // Starte das Spiel direkt
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    this.router.navigate(['/calendar']);
   }
 
-  showNewPlayerForm(): void {
-    this.isCreatingNewPlayer = true;
-    this.selectedPlayer = null;
-    this.newPlayerName = '';
+  showNewUserForm(): void {
+    this.isCreatingNewUser = true;
+    this.selectedUser = null;
+    this.newUserFirstName = '';
+    this.newUserLastName = '';
+    this.newUserBirthDate = '';
+    this.newUserEmail = '';
   }
 
-  createNewPlayer(): void {
-    if (this.newPlayerName.trim()) {
-      this.playerService.createPlayer(this.newPlayerName.trim()).subscribe({
-        next: (player) => {
-          this.playerService.setCurrentPlayer(player);
+  createNewUser(): void {
+    if (this.newUserFirstName.trim() && this.newUserLastName.trim() && this.newUserBirthDate && this.newUserEmail.trim()) {
+      const newUser: User = {
+        firstName: this.newUserFirstName.trim(),
+        lastName: this.newUserLastName.trim(),
+        birthDate: this.newUserBirthDate,
+        email: this.newUserEmail.trim()
+      };
+
+      this.userService.createUser(newUser).subscribe({
+        next: (user) => {
+          // User wurde erstellt, navigiere zum Kalender
+          localStorage.setItem('currentUser', JSON.stringify(user));
           this.router.navigate(['/calendar']);
         },
         error: (error) => {
-          console.warn('Backend nicht erreichbar, erstelle lokalen Spieler:', error);
-          // Fallback: Lokalen Spieler erstellen wenn Backend nicht läuft
-          const newPlayer: Player = {
-            id: Date.now(),
-            name: this.newPlayerName.trim(),
-            correctAnswers: 0,
-            totalAnswers: 0
-          };
-          this.playerService.setCurrentPlayer(newPlayer);
-          this.router.navigate(['/calendar']);
+          console.error('Fehler beim Erstellen des Benutzers:', error);
         }
       });
     }
   }
 
   startGame(): void {
-    if (this.selectedPlayer) {
-      this.playerService.setCurrentPlayer(this.selectedPlayer);
+    if (this.selectedUser) {
+      localStorage.setItem('currentUser', JSON.stringify(this.selectedUser));
       this.router.navigate(['/calendar']);
-    } else if (this.isCreatingNewPlayer) {
-      this.createNewPlayer();
+    } else if (this.isCreatingNewUser) {
+      this.createNewUser();
     }
   }
 }
