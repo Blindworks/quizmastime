@@ -1,5 +1,7 @@
 package com.quizmastime.backend.service;
 
+import com.quizmastime.backend.dto.AnswerResponseDTO;
+import com.quizmastime.backend.dto.AnswerSubmissionDTO;
 import com.quizmastime.backend.dto.UserQuestionDTO;
 import com.quizmastime.backend.model.Question;
 import com.quizmastime.backend.model.User;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -162,6 +165,60 @@ public class UserQuestionService {
 
         userQuestionRepository.deleteById(id);
         log.info("User question deleted successfully with id: {}", id);
+    }
+
+    @Transactional
+    public AnswerResponseDTO submitAnswer(AnswerSubmissionDTO submissionDTO) {
+        log.info("Submitting answer for user {} on day {} for question {}",
+                submissionDTO.getUserId(), submissionDTO.getDay(), submissionDTO.getQuestionId());
+
+        // Validate user exists
+        User user = userRepository.findById(submissionDTO.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + submissionDTO.getUserId()));
+
+        // Validate question exists
+        Question question = questionRepository.findById(submissionDTO.getQuestionId())
+                .orElseThrow(() -> new IllegalArgumentException("Question not found with id: " + submissionDTO.getQuestionId()));
+
+        // Find or create UserQuestion
+        Optional<UserQuestion> existingUserQuestion = userQuestionRepository.findByUserIdAndQuestionId(
+                submissionDTO.getUserId(), submissionDTO.getQuestionId());
+
+        UserQuestion userQuestion;
+        if (existingUserQuestion.isPresent()) {
+            userQuestion = existingUserQuestion.get();
+        } else {
+            // Create new UserQuestion entry
+            userQuestion = UserQuestion.builder()
+                    .user(user)
+                    .question(question)
+                    .day(submissionDTO.getDay())
+                    .wrongAttempts(0)
+                    .build();
+        }
+
+        // Check if answer is correct
+        boolean isCorrect = question.getCorrectAnswer().equals(submissionDTO.getSelectedAnswer());
+
+        if (isCorrect) {
+            userQuestion.setCorrectAnswerDate(LocalDateTime.now());
+            log.info("Correct answer recorded for user {} on question {}", submissionDTO.getUserId(), submissionDTO.getQuestionId());
+        } else {
+            userQuestion.setWrongAttempts(userQuestion.getWrongAttempts() + 1);
+            userQuestion.setLastWrongAnswer(LocalDateTime.now());
+            log.info("Wrong answer recorded for user {} on question {}. Total wrong attempts: {}",
+                    submissionDTO.getUserId(), submissionDTO.getQuestionId(), userQuestion.getWrongAttempts());
+        }
+
+        UserQuestion savedUserQuestion = userQuestionRepository.save(userQuestion);
+
+        // Build response
+        return AnswerResponseDTO.builder()
+                .correct(isCorrect)
+                .correctAnswer(question.getCorrectAnswer())
+                .userQuestion(mapToDTO(savedUserQuestion))
+                .message(isCorrect ? "Richtig! Gut gemacht!" : "Leider falsch. Versuch es nochmal!")
+                .build();
     }
 
     private UserQuestionDTO mapToDTO(UserQuestion userQuestion) {

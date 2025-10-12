@@ -1,5 +1,7 @@
 package com.quizmastime.backend.controller;
 
+import com.quizmastime.backend.dto.AnswerResponseDTO;
+import com.quizmastime.backend.dto.AnswerSubmissionDTO;
 import com.quizmastime.backend.dto.UserQuestionDTO;
 import com.quizmastime.backend.service.UserQuestionService;
 import jakarta.validation.Valid;
@@ -111,6 +113,19 @@ public class UserQuestionController {
         } catch (IllegalArgumentException e) {
             log.error("Error deleting user question: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @PostMapping("/submit-answer")
+    public ResponseEntity<AnswerResponseDTO> submitAnswer(@Valid @RequestBody AnswerSubmissionDTO submissionDTO) {
+        log.info("POST /api/user-questions/submit-answer - Submitting answer for user {} on day {}",
+                submissionDTO.getUserId(), submissionDTO.getDay());
+        try {
+            AnswerResponseDTO response = userQuestionService.submitAnswer(submissionDTO);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            log.error("Error submitting answer: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 }

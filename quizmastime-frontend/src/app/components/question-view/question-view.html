@@ -1,0 +1,101 @@
+<div class="question-container">
+  <!-- Header -->
+  <header class="question-header">
+    <button mat-icon-button (click)="backToCalendar()" class="back-button">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="day-badge">Tag {{ day }}</div>
+    <div class="user-info" *ngIf="currentUser">
+      <div class="user-avatar">
+        {{ currentUser.firstName.charAt(0).toUpperCase() }}
+      </div>
+    </div>
+  </header>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+    <p>Frage wird geladen...</p>
+  </div>
+
+  <!-- Question Content -->
+  <div class="question-content" *ngIf="!loading && question">
+    <!-- Question Card -->
+    <mat-card class="question-card">
+      <mat-card-content>
+        <div class="question-icon">
+          <mat-icon>help_outline</mat-icon>
+        </div>
+        <h2 class="question-text">{{ question.questionText }}</h2>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Answer Options -->
+    <div class="answers-container">
+      <div
+        *ngFor="let answer of answers"
+        [ngClass]="getAnswerClass(answer)"
+        (click)="selectAnswer(answer.index)"
+        class="answer-card">
+        <div class="answer-content">
+          <span class="answer-text">{{ answer.text }}</span>
+          <div class="answer-icon" *ngIf="isAnswered">
+            <mat-icon *ngIf="answer.index === question.correctAnswer">check_circle</mat-icon>
+            <mat-icon *ngIf="selectedAnswer === answer.index && answer.index !== question.correctAnswer">cancel</mat-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="action-container" *ngIf="!isAnswered">
+      <button
+        mat-raised-button
+        color="primary"
+        class="submit-button"
+        (click)="submitAnswer()"
+        [disabled]="selectedAnswer === null">
+        Antwort abgeben
+      </button>
+    </div>
+
+    <!-- Result Message -->
+    <div class="result-container" *ngIf="isAnswered">
+      <mat-card [ngClass]="isCorrect ? 'result-card correct' : 'result-card incorrect'">
+        <mat-card-content>
+          <div class="result-icon">
+            <mat-icon>{{ isCorrect ? 'celebration' : 'sentiment_dissatisfied' }}</mat-icon>
+          </div>
+          <h3>{{ isCorrect ? 'Super gemacht!' : 'Leider falsch' }}</h3>
+          <p *ngIf="isCorrect">
+            Du hast die Frage richtig beantwortet! Das Türchen ist nun geöffnet.
+          </p>
+          <p *ngIf="!isCorrect">
+            Das war nicht ganz richtig. Versuch es beim nächsten Mal noch einmal!
+          </p>
+          <button
+            mat-raised-button
+            color="accent"
+            class="back-to-calendar-button"
+            (click)="backToCalendar()">
+            Zurück zum Kalender
+          </button>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div class="error-container" *ngIf="!loading && !question">
+    <mat-card>
+      <mat-card-content>
+        <mat-icon class="error-icon">error_outline</mat-icon>
+        <h3>Keine Frage gefunden</h3>
+        <p>Für diesen Tag ist noch keine Frage verfügbar.</p>
+        <button mat-raised-button color="primary" (click)="backToCalendar()">
+          Zurück zum Kalender
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
