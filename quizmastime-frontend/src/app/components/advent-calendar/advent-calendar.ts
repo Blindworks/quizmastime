@@ -57,9 +57,13 @@ export class AdventCalendar implements OnInit {
     const isDecember = currentMonth === 11;
 
     for (let day = 1; day <= 24; day++) {
+      // Im Dezember: Tage bis heute freischalten
+      // Außerhalb Dezember (für Tests): Mindestens Tag 1 freischalten
+      const isUnlocked = isDecember ? (day <= today) : (day === 1);
+
       this.calendarDays.push({
         day: day,
-        isUnlocked: isDecember && day <= today,
+        isUnlocked: isUnlocked,
         isCompleted: false, // TODO: Load from backend
         isToday: isDecember && day === today,
         iconPath: `/assets/icons/day-${day}.png`
