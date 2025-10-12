@@ -30,6 +30,17 @@
         <td mat-cell *matCellDef="let uq">{{formatDate(uq.lastWrongAnswer)}}</td>
       </ng-container>
 
+      <ng-container matColumnDef="lockoutStatus">
+        <th mat-header-cell *matHeaderCellDef>Lockout Status</th>
+        <td mat-cell *matCellDef="let uq" [ngClass]="{
+          'lockout-active': uq.isLockedOut,
+          'lockout-expired': !uq.isLockedOut && uq.lastWrongAnswer && !uq.correctAnswerDate,
+          'lockout-success': uq.correctAnswerDate
+        }">
+          {{getLockoutStatusText(uq)}}
+        </td>
+      </ng-container>
+
       <ng-container matColumnDef="correctAnswerDate">
         <th mat-header-cell *matHeaderCellDef>Correct Answer Date</th>
         <td mat-cell *matCellDef="let uq">{{formatDate(uq.correctAnswerDate)}}</td>

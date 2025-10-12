@@ -15,6 +15,8 @@ import { forkJoin } from 'rxjs';
 interface UserQuestionDisplay extends UserQuestion {
   userName?: string;
   questionText?: string;
+  isLockedOut?: boolean;
+  lockoutRemainingMinutes?: number;
 }
 
 @Component({
@@ -31,7 +33,8 @@ interface UserQuestionDisplay extends UserQuestion {
 })
 export class UserQuestionList implements OnInit {
   userQuestions: UserQuestionDisplay[] = [];
-  displayedColumns: string[] = ['userName', 'questionText', 'day', 'wrongAttempts', 'lastWrongAnswer', 'correctAnswerDate', 'actions'];
+  displayedColumns: string[] = ['userName', 'questionText', 'day', 'wrongAttempts', 'lastWrongAnswer', 'lockoutStatus', 'correctAnswerDate', 'actions'];
+  lockoutDurationMinutes: number = 30; // Should match backend configuration
 
   constructor(
     private userQuestionService: UserQuestionService,
@@ -75,10 +78,13 @@ export class UserQuestionList implements OnInit {
                 const user = userMap.get(uq.userId);
                 const question = questionMap.get(uq.questionId);
 
+                const lockoutInfo = this.calculateLockoutStatus(uq);
                 this.userQuestions.push({
                   ...uq,
                   userName: user ? `${user.firstName} ${user.lastName}` : 'Unknown',
-                  questionText: question ? question.questionText : 'Unknown'
+                  questionText: question ? question.questionText : 'Unknown',
+                  isLockedOut: lockoutInfo.isLockedOut,
+                  lockoutRemainingMinutes: lockoutInfo.remainingMinutes
                 });
               });
             });
@@ -118,5 +124,47 @@ export class UserQuestionList implements OnInit {
     if (!dateString) return '-';
     const date = new Date(dateString);
     return date.toLocaleString();
+  }
+
+  calculateLockoutStatus(uq: UserQuestion): { isLockedOut: boolean, remainingMinutes: number } {
+    // If no wrong answer recorded, not locked out
+    if (!uq.lastWrongAnswer) {
+      return { isLockedOut: false, remainingMinutes: 0 };
+    }
+
+    // If already answered correctly, not locked out
+    if (uq.correctAnswerDate) {
+      return { isLockedOut: false, remainingMinutes: 0 };
+    }
+
+    // Calculate lockout end time
+    const lastWrongDate = new Date(uq.lastWrongAnswer);
+    const lockoutUntil = new Date(lastWrongDate.getTime() + this.lockoutDurationMinutes * 60 * 1000);
+    const now = new Date();
+
+    // Check if still locked out
+    if (now < lockoutUntil) {
+      const remainingMs = lockoutUntil.getTime() - now.getTime();
+      const remainingMinutes = Math.ceil(remainingMs / (60 * 1000));
+      return { isLockedOut: true, remainingMinutes };
+    }
+
+    return { isLockedOut: false, remainingMinutes: 0 };
+  }
+
+  getLockoutStatusText(uq: UserQuestionDisplay): string {
+    if (uq.correctAnswerDate) {
+      return '✓ Beantwortet';
+    }
+
+    if (uq.isLockedOut && uq.lockoutRemainingMinutes) {
+      return `🔒 Gesperrt (${uq.lockoutRemainingMinutes} Min)`;
+    }
+
+    if (uq.lastWrongAnswer && !uq.isLockedOut) {
+      return '⚠️ Falsch beantwortet';
+    }
+
+    return '-';
   }
 }

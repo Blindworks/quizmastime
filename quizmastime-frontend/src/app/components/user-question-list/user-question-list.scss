@@ -12,3 +12,22 @@ mat-card {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+// Lockout status styling
+.lockout-active {
+  color: #ff9800;
+  font-weight: bold;
+  background-color: rgba(255, 152, 0, 0.1);
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.lockout-expired {
+  color: #f44336;
+  font-weight: 500;
+}
+
+.lockout-success {
+  color: #4caf50;
+  font-weight: 500;
+}
