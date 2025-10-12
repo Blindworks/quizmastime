@@ -103,6 +103,8 @@ export class QuestionView implements OnInit {
   selectAnswer(answerIndex: number): void {
     if (this.isAnswered) return;
     this.selectedAnswer = answerIndex;
+    // Direkt absenden nach Auswahl
+    this.submitAnswer();
   }
 
   submitAnswer(): void {

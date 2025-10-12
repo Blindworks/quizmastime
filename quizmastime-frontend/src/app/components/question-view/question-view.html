@@ -49,18 +49,6 @@
       </div>
     </div>
 
-    <!-- Submit Button -->
-    <div class="action-container" *ngIf="!isAnswered">
-      <button
-        mat-raised-button
-        color="primary"
-        class="submit-button"
-        (click)="submitAnswer()"
-        [disabled]="selectedAnswer === null">
-        Antwort abgeben
-      </button>
-    </div>
-
     <!-- Result Message -->
     <div class="result-container" *ngIf="isAnswered">
       <mat-card [ngClass]="isCorrect ? 'result-card correct' : 'result-card incorrect'">
