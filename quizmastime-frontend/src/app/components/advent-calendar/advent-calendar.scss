@@ -152,17 +152,35 @@
     }
   }
 
+  .day-icon-container {
+    width: 80%;
+    height: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+
+    .day-icon-image {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    }
+  }
+
+  &.locked .day-icon-container .day-icon-image {
+    filter: grayscale(100%) opacity(0.5);
+  }
+
   .day-number {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: bold;
     color: #333;
     z-index: 1;
   }
 
-  .day-icon {
+  .day-status {
     position: absolute;
-    bottom: 0.5rem;
-    right: 0.5rem;
     font-size: 1.5rem;
 
     mat-icon {
@@ -171,22 +189,16 @@
       height: 1.5rem;
     }
 
-    &.lock-icon {
-      color: #999;
+    &.completed-status {
+      bottom: 0.5rem;
+      right: 0.5rem;
+      color: white;
     }
-  }
 
-  .day-decoration {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    color: #ff6b6b;
-    font-size: 2rem;
-
-    mat-icon {
-      font-size: 2rem;
-      width: 2rem;
-      height: 2rem;
+    &.lock-status {
+      top: 0.5rem;
+      right: 0.5rem;
+      color: #999;
     }
   }
 }

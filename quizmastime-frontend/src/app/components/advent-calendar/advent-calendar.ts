@@ -11,6 +11,7 @@ interface CalendarDay {
   isUnlocked: boolean;
   isCompleted: boolean;
   isToday: boolean;
+  iconPath: string;
 }
 
 @Component({
@@ -60,7 +61,8 @@ export class AdventCalendar implements OnInit {
         day: day,
         isUnlocked: isDecember && day <= today,
         isCompleted: false, // TODO: Load from backend
-        isToday: isDecember && day === today
+        isToday: isDecember && day === today,
+        iconPath: `/assets/icons/day-${day}.png`
       });
     }
   }
