@@ -4,7 +4,9 @@
     <button mat-icon-button (click)="backToCalendar()" class="back-button">
       <mat-icon>arrow_back</mat-icon>
     </button>
-    <div class="day-badge">Tag {{ day }}</div>
+    <div class="day-icon-badge">
+      <img [src]="getDayIconPath()" [alt]="'Tag ' + day" class="day-icon" />
+    </div>
     <div class="user-info" *ngIf="currentUser">
       <div class="user-avatar">
         {{ currentUser.firstName.charAt(0).toUpperCase() }}

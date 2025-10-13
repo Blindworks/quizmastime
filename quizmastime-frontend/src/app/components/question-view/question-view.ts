@@ -209,4 +209,8 @@ export class QuestionView implements OnInit {
 
     return classes;
   }
+
+  getDayIconPath(): string {
+    return `/assets/icons/day-${this.day}.png`;
+  }
 }
