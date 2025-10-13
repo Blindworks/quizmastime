@@ -1,14 +1,8 @@
 <div class="question-container">
   <!-- Header -->
-  <header class="question-header">
-    <button mat-icon-button (click)="backToCalendar()" class="back-button">
-      <mat-icon>arrow_back</mat-icon>
-    </button>
-    <div class="day-icon-badge">
-      <img [src]="getDayIconPath()" [alt]="'Tag ' + day" class="day-icon" />
-    </div>
-    <div class="user-info" *ngIf="currentUser">
-      <div class="user-avatar">
+  <header class="question-header" *ngIf="currentUser">
+    <div class="player-info">
+      <div class="player-avatar">
         <img
           [src]="getAvatarUrl(currentUser)"
           [alt]="currentUser.firstName"
@@ -17,7 +11,13 @@
           [style.display]="hasImageError ? 'none' : 'block'">
         <span class="avatar-fallback" [style.display]="hasImageError ? 'flex' : 'none'">{{ currentUser.firstName.charAt(0).toUpperCase() }}</span>
       </div>
+      <div class="player-details">
+        <h2>{{ currentUser.firstName }}</h2>
+      </div>
     </div>
+    <button mat-icon-button (click)="backToCalendar()" class="back-button" matTooltip="Zurück zum Kalender">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
   </header>
 
   <!-- Loading State -->
