@@ -9,7 +9,13 @@
     </div>
     <div class="user-info" *ngIf="currentUser">
       <div class="user-avatar">
-        {{ currentUser.firstName.charAt(0).toUpperCase() }}
+        <img
+          [src]="getAvatarUrl(currentUser)"
+          [alt]="currentUser.firstName"
+          class="avatar-image"
+          (error)="onImageError()"
+          [style.display]="hasImageError ? 'none' : 'block'">
+        <span class="avatar-fallback" [style.display]="hasImageError ? 'flex' : 'none'">{{ currentUser.firstName.charAt(0).toUpperCase() }}</span>
       </div>
     </div>
   </header>

@@ -3,7 +3,13 @@
   <header class="calendar-header" *ngIf="currentUser">
     <div class="player-info">
       <div class="player-avatar">
-        {{ currentUser.firstName.charAt(0).toUpperCase() }}
+        <img
+          [src]="getAvatarUrl(currentUser)"
+          [alt]="currentUser.firstName"
+          class="avatar-image"
+          (error)="onImageError()"
+          [style.display]="hasImageError ? 'none' : 'block'">
+        <span class="avatar-fallback" [style.display]="hasImageError ? 'flex' : 'none'">{{ currentUser.firstName.charAt(0).toUpperCase() }}</span>
       </div>
       <div class="player-details">
         <h2>{{ currentUser.firstName }}</h2>

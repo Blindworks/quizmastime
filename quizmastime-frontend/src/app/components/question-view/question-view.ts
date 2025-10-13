@@ -35,6 +35,7 @@ export class QuestionView implements OnInit {
   isLockedOut: boolean = false;
   lockoutMessage: string = '';
   lockoutRemainingMinutes: number = 0;
+  hasImageError: boolean = false;
 
   constructor(
     private questionService: QuestionService,
@@ -212,5 +213,15 @@ export class QuestionView implements OnInit {
 
   getDayIconPath(): string {
     return `/assets/icons/day-${this.day}.png`;
+  }
+
+  getAvatarUrl(user: User): string {
+    const firstName = user.firstName.toLowerCase();
+    const lastName = user.lastName.toLowerCase();
+    return `/assets/images/players/${firstName}_${lastName}.png`;
+  }
+
+  onImageError(): void {
+    this.hasImageError = true;
   }
 }

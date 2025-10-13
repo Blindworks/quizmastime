@@ -31,6 +31,7 @@ export class AdventCalendar implements OnInit {
   calendarDays: CalendarDay[] = [];
   currentDate: Date = new Date();
   userQuestions: UserQuestion[] = [];
+  hasImageError: boolean = false;
 
   constructor(
     private router: Router,
@@ -123,5 +124,15 @@ export class AdventCalendar implements OnInit {
   logout(): void {
     localStorage.removeItem('currentUser');
     this.router.navigate(['/']);
+  }
+
+  getAvatarUrl(user: User): string {
+    const firstName = user.firstName.toLowerCase();
+    const lastName = user.lastName.toLowerCase();
+    return `/assets/images/players/${firstName}_${lastName}.png`;
+  }
+
+  onImageError(): void {
+    this.hasImageError = true;
   }
 }
