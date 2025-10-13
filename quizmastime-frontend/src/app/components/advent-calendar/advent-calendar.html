@@ -35,8 +35,6 @@
           <img [src]="calendarDay.iconPath" [alt]="'Tag ' + calendarDay.day" class="day-icon-image" />
         </div>
 
-        <div class="day-number">{{ calendarDay.day }}</div>
-
         <!-- Completed Status -->
         <div class="day-status completed-status" *ngIf="calendarDay.isCompleted">
           <mat-icon>check_circle</mat-icon>
