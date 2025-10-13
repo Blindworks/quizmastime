@@ -18,7 +18,9 @@
       "Bash(npm start)",
       "Bash(./mvnw:*)",
       "Bash(npm run build)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(mkdir:*)",
+      "Bash(exit 0)"
     ],
     "deny": [],
     "ask": []

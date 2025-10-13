@@ -15,8 +15,13 @@
         [class.selected]="selectedUser?.id === user.id"
         (click)="selectExistingUser(user)">
         <div class="player-avatar">
-          <!-- Platzhalter für Avatar-Grafik -->
-          <span>{{ user.firstName.charAt(0).toUpperCase() }}</span>
+          <img
+            [src]="getAvatarUrl(user)"
+            [alt]="user.firstName"
+            class="avatar-image"
+            (error)="onImageError(user)"
+            [style.display]="hasImageError(user) ? 'none' : 'block'">
+          <span class="avatar-fallback" [style.display]="hasImageError(user) ? 'flex' : 'none'">{{ user.firstName.charAt(0).toUpperCase() }}</span>
         </div>
         <div class="player-name">{{ user.firstName }}</div>
       </div>

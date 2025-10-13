@@ -32,6 +32,7 @@ export class PlayerSelection implements OnInit {
   newUserBirthDate: string = '';
   newUserEmail: string = '';
   isCreatingNewUser: boolean = false;
+  imageLoadErrors: Set<number> = new Set();
 
   constructor(
     private userService: UserService,
@@ -100,5 +101,26 @@ export class PlayerSelection implements OnInit {
     } else if (this.isCreatingNewUser) {
       this.createNewUser();
     }
+  }
+
+  getAvatarUrl(user: User): string {
+    const firstName = user.firstName.toLowerCase();
+    const lastName = user.lastName.toLowerCase();
+    return `/assets/images/players/${firstName}_${lastName}.png`;
+  }
+
+  onImageError(user: User): void {
+    if (user.id) {
+      this.imageLoadErrors.add(user.id);
+    }
+  }
+
+  hasImageError(user: User): boolean {
+    return user.id ? this.imageLoadErrors.has(user.id) : true;
+  }
+
+  hasCustomAvatar(user: User): boolean {
+    // Falls du später prüfen möchtest, ob ein Custom Avatar existiert
+    return user.avatarUrl !== undefined && user.avatarUrl !== null && user.avatarUrl !== '';
   }
 }
