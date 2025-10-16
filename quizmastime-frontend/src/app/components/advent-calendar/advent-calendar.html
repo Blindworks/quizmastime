@@ -15,9 +15,15 @@
         <h2>{{ currentUser.firstName }}</h2>
       </div>
     </div>
-    <button mat-icon-button (click)="logout()" class="logout-button" matTooltip="Benutzer wechseln">
-      <mat-icon>logout</mat-icon>
-    </button>
+    <div class="logout-avatar" (click)="logout()" matTooltip="Zurück">
+      <img
+        [src]="'/assets/icons/back.png'"
+        [alt]="logout"
+        class="avatar-image"
+        (error)="onLogoutImageError()"
+        [style.display]="hasLogoutImageError ? 'none' : 'block'">
+      <span class="avatar-fallback" [style.display]="hasLogoutImageError ? 'flex' : 'none'">{{ currentUser.firstName.charAt(0).toUpperCase() }}</span>
+    </div>
   </header>
 
   <!-- Main calendar area -->

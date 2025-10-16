@@ -32,6 +32,7 @@ export class AdventCalendar implements OnInit {
   currentDate: Date = new Date();
   userQuestions: UserQuestion[] = [];
   hasImageError: boolean = false;
+  hasLogoutImageError: boolean = false;
 
   constructor(
     private router: Router,
@@ -134,5 +135,9 @@ export class AdventCalendar implements OnInit {
 
   onImageError(): void {
     this.hasImageError = true;
+  }
+
+  onLogoutImageError(): void {
+    this.hasLogoutImageError = true;
   }
 }

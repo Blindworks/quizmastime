@@ -36,6 +36,7 @@ export class QuestionView implements OnInit {
   lockoutMessage: string = '';
   lockoutRemainingMinutes: number = 0;
   hasImageError: boolean = false;
+  hasBackImageError: boolean = false;
 
   constructor(
     private questionService: QuestionService,
@@ -223,5 +224,9 @@ export class QuestionView implements OnInit {
 
   onImageError(): void {
     this.hasImageError = true;
+  }
+
+  onBackImageError(): void {
+    this.hasBackImageError = true;
   }
 }
