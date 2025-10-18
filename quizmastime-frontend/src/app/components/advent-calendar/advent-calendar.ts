@@ -4,8 +4,10 @@ import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { User } from '../../models/user';
 import { UserQuestionService, UserQuestion } from '../../services/user-question.service';
+import { CongratulationsDialog } from '../congratulations-dialog/congratulations-dialog';
 
 interface CalendarDay {
   day: number;
@@ -21,7 +23,8 @@ interface CalendarDay {
     CommonModule,
     MatButtonModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatDialogModule
   ],
   templateUrl: './advent-calendar.html',
   styleUrl: './advent-calendar.scss'
@@ -36,7 +39,8 @@ export class AdventCalendar implements OnInit {
 
   constructor(
     private router: Router,
-    private userQuestionService: UserQuestionService
+    private userQuestionService: UserQuestionService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -104,12 +108,55 @@ export class AdventCalendar implements OnInit {
     }
 
     if (calendarDay.day === 24) {
-      // Special logic for Christmas Day
-      this.router.navigate(['/gift']);
+      // Special logic for Christmas Day - check if all questions are answered correctly
+      const allQuestionsCorrect = this.checkAllQuestionsAnsweredCorrectly();
+      if (allQuestionsCorrect && this.isDecember24th()) {
+        // Show congratulations popup
+        this.showCongratulationsDialog();
+      } else if (allQuestionsCorrect) {
+        // If all questions are correct but it's not December 24th yet
+        this.router.navigate(['/prize']);
+      } else {
+        // Navigate to question 24 if not all questions are answered correctly
+        this.router.navigate(['/question', calendarDay.day]);
+      }
     } else {
       // Navigate to question
       this.router.navigate(['/question', calendarDay.day]);
     }
+  }
+
+  isDecember24th(): boolean {
+    const today = new Date();
+    return today.getMonth() === 11 && today.getDate() === 24;
+  }
+
+  showCongratulationsDialog(): void {
+    const dialogRef = this.dialog.open(CongratulationsDialog, {
+      width: '600px',
+      disableClose: false,
+      panelClass: 'congratulations-dialog'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'view-prize') {
+        this.router.navigate(['/prize']);
+      }
+    });
+  }
+
+  checkAllQuestionsAnsweredCorrectly(): boolean {
+    // Check if all 24 questions have been answered correctly
+    if (this.userQuestions.length < 24) {
+      return false;
+    }
+
+    // Check if all questions have a correctAnswerDate (meaning they were answered correctly)
+    const allCorrect = this.userQuestions
+      .filter(uq => uq.day <= 24)
+      .every(uq => uq.correctAnswerDate != null);
+
+    return allCorrect;
   }
 
   getDayClasses(calendarDay: CalendarDay): string[] {
@@ -139,5 +186,9 @@ export class AdventCalendar implements OnInit {
 
   onLogoutImageError(): void {
     this.hasLogoutImageError = true;
+  }
+
+  testCongratulationsPopup(): void {
+    this.showCongratulationsDialog();
   }
 }

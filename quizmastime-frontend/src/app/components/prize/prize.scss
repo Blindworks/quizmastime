@@ -1,0 +1,429 @@
+.prize-container {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #1a237e 0%, #283593 50%, #3949ab 100%);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+      radial-gradient(2px 2px at 20% 30%, white, transparent),
+      radial-gradient(2px 2px at 60% 70%, white, transparent),
+      radial-gradient(1px 1px at 50% 50%, white, transparent);
+    background-size: 200px 200px;
+    opacity: 0.3;
+    pointer-events: none;
+  }
+}
+
+.prize-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  z-index: 10;
+
+  .player-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .player-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border: 3px solid white;
+    overflow: hidden;
+    position: relative;
+
+    .avatar-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .avatar-fallback {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .player-details {
+    color: white;
+
+    h2 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+  }
+
+  .logout-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border: 3px solid white;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    .avatar-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .avatar-fallback {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    &:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+  }
+}
+
+.prize-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  z-index: 1;
+  position: relative;
+}
+
+.celebration-animation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #ffd700;
+  top: -10%;
+  animation: fall 3s linear infinite;
+
+  &:nth-child(1) {
+    left: 10%;
+    animation-delay: 0s;
+    background: #ff6b6b;
+  }
+
+  &:nth-child(2) {
+    left: 30%;
+    animation-delay: 0.5s;
+    background: #4ecdc4;
+  }
+
+  &:nth-child(3) {
+    left: 50%;
+    animation-delay: 1s;
+    background: #ffd700;
+  }
+
+  &:nth-child(4) {
+    left: 70%;
+    animation-delay: 1.5s;
+    background: #95e1d3;
+  }
+
+  &:nth-child(5) {
+    left: 90%;
+    animation-delay: 2s;
+    background: #f38181;
+  }
+}
+
+@keyframes fall {
+  0% {
+    top: -10%;
+    transform: translateX(0) rotateZ(0deg);
+  }
+  100% {
+    top: 110%;
+    transform: translateX(100px) rotateZ(360deg);
+  }
+}
+
+.prize-card {
+  background: white;
+  border-radius: 24px;
+  padding: 3rem;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  animation: slideIn 0.6s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(50px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.congratulations-title {
+  font-size: 2.5rem;
+  color: #1a237e;
+  margin: 0 0 2rem 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.success-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  border-radius: 16px;
+
+  .trophy-icon {
+    font-size: 4rem;
+    width: 4rem;
+    height: 4rem;
+    color: #ff6b6b;
+    animation: bounce 1s ease-in-out infinite;
+  }
+
+  .message-text {
+    font-size: 1.3rem;
+    color: #333;
+    margin: 0;
+    font-weight: 600;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.prize-reveal {
+  margin: 2rem 0;
+
+  .prize-title {
+    font-size: 1.8rem;
+    color: #1a237e;
+    margin: 0 0 1.5rem 0;
+  }
+}
+
+.prize-box {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: 2rem;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+
+  .prize-icon {
+    mat-icon {
+      font-size: 5rem;
+      width: 5rem;
+      height: 5rem;
+      animation: rotate 3s linear infinite;
+    }
+  }
+
+  .prize-description {
+    h3 {
+      font-size: 2rem;
+      margin: 0 0 0.5rem 0;
+    }
+
+    p {
+      font-size: 1.1rem;
+      margin: 0;
+      opacity: 0.95;
+    }
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.christmas-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2rem 0;
+  padding: 1rem;
+  background: rgba(26, 35, 126, 0.05);
+  border-radius: 12px;
+
+  .star-icon {
+    color: #ffd700;
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  p {
+    font-size: 1.2rem;
+    color: #1a237e;
+    margin: 0;
+    font-weight: 500;
+  }
+}
+
+.back-button {
+  margin-top: 1rem;
+  padding: 0.75rem 2rem;
+  font-size: 1.1rem;
+  border-radius: 12px;
+}
+
+// Mobile adjustments
+@media (max-width: 767px) {
+  .prize-header {
+    padding: 1rem;
+
+    .player-avatar,
+    .logout-avatar {
+      width: 50px;
+      height: 50px;
+    }
+
+    .player-details h2 {
+      font-size: 1.2rem;
+    }
+  }
+
+  .prize-content {
+    padding: 1rem;
+  }
+
+  .prize-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .congratulations-title {
+    font-size: 2rem;
+  }
+
+  .success-message {
+    .trophy-icon {
+      font-size: 3rem;
+      width: 3rem;
+      height: 3rem;
+    }
+
+    .message-text {
+      font-size: 1.1rem;
+    }
+  }
+
+  .prize-reveal .prize-title {
+    font-size: 1.5rem;
+  }
+
+  .prize-box {
+    padding: 1.5rem;
+
+    .prize-icon mat-icon {
+      font-size: 4rem;
+      width: 4rem;
+      height: 4rem;
+    }
+
+    .prize-description h3 {
+      font-size: 1.5rem;
+    }
+
+    .prize-description p {
+      font-size: 1rem;
+    }
+  }
+
+  .christmas-message {
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .star-icon {
+      font-size: 1.5rem;
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+
+    p {
+      font-size: 1rem;
+    }
+  }
+}
+
+// Tablet adjustments
+@media (min-width: 768px) and (max-width: 1024px) {
+  .prize-card {
+    padding: 2.5rem;
+    max-width: 700px;
+  }
+}

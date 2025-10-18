@@ -1,0 +1,28 @@
+<div class="congratulations-container">
+  <div class="congratulations-header">
+    <mat-icon class="celebration-icon">celebration</mat-icon>
+    <h1 mat-dialog-title>Herzlichen Glückwunsch!</h1>
+  </div>
+
+  <div mat-dialog-content class="congratulations-content">
+    <p class="main-message">
+      Du hast alle 24 Fragen richtig beantwortet!
+    </p>
+    <p class="sub-message">
+      Du bist ein echter Weihnachts-Experte! 🎄✨
+    </p>
+    <p class="prize-message">
+      Dein Geschenk wartet auf dich und kann jetzt angeschaut werden!
+    </p>
+  </div>
+
+  <div mat-dialog-actions class="dialog-actions">
+    <button mat-raised-button color="primary" (click)="onViewPrize()" class="view-prize-button">
+      <mat-icon>card_giftcard</mat-icon>
+      Geschenk anschauen
+    </button>
+    <button mat-button (click)="onClose()">
+      Später
+    </button>
+  </div>
+</div>

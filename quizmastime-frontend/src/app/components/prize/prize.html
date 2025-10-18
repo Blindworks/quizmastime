@@ -1,0 +1,73 @@
+<div class="prize-container">
+  <!-- Header with player info -->
+  <header class="prize-header" *ngIf="currentUser">
+    <div class="player-info">
+      <div class="player-avatar">
+        <img
+          [src]="getAvatarUrl(currentUser)"
+          [alt]="currentUser.firstName"
+          class="avatar-image"
+          (error)="onImageError()"
+          [style.display]="hasImageError ? 'none' : 'block'">
+        <span class="avatar-fallback" [style.display]="hasImageError ? 'flex' : 'none'">{{ currentUser.firstName.charAt(0).toUpperCase() }}</span>
+      </div>
+      <div class="player-details">
+        <h2>{{ currentUser.firstName }}</h2>
+      </div>
+    </div>
+    <div class="logout-avatar" (click)="logout()" matTooltip="Zurück">
+      <img
+        [src]="'/assets/icons/back.png'"
+        [alt]="'logout'"
+        class="avatar-image"
+        (error)="onLogoutImageError()"
+        [style.display]="hasLogoutImageError ? 'none' : 'block'">
+      <span class="avatar-fallback" [style.display]="hasLogoutImageError ? 'flex' : 'none'">←</span>
+    </div>
+  </header>
+
+  <!-- Main prize content -->
+  <div class="prize-content">
+    <div class="celebration-animation">
+      <div class="confetti"></div>
+      <div class="confetti"></div>
+      <div class="confetti"></div>
+      <div class="confetti"></div>
+      <div class="confetti"></div>
+    </div>
+
+    <div class="prize-card">
+      <h1 class="congratulations-title">Herzlichen Glückwunsch!</h1>
+
+      <div class="success-message">
+        <mat-icon class="trophy-icon">emoji_events</mat-icon>
+        <p class="message-text">
+          Du hast alle {{ totalQuestions }} Fragen richtig beantwortet!
+        </p>
+      </div>
+
+      <div class="prize-reveal">
+        <h2 class="prize-title">Dein Gewinn:</h2>
+        <div class="prize-box">
+          <div class="prize-icon">
+            <mat-icon>card_giftcard</mat-icon>
+          </div>
+          <div class="prize-description">
+            <h3>{{ prizeTitle }}</h3>
+            <p>{{ prizeDescription }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="christmas-message">
+        <mat-icon class="star-icon">star</mat-icon>
+        <p>Frohe Weihnachten und viel Freude mit deinem Gewinn!</p>
+        <mat-icon class="star-icon">star</mat-icon>
+      </div>
+
+      <button mat-raised-button color="primary" (click)="logout()" class="back-button">
+        Zurück zur Startseite
+      </button>
+    </div>
+  </div>
+</div>

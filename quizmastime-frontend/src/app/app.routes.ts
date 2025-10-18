@@ -3,6 +3,7 @@ import { PlayerSelection } from './components/player-selection/player-selection'
 import { AdventCalendar } from './components/advent-calendar/advent-calendar';
 import { Admin } from './components/admin/admin';
 import { QuestionView } from './components/question-view/question-view';
+import { Prize } from './components/prize/prize';
 
 export const routes: Routes = [
   {
@@ -16,6 +17,10 @@ export const routes: Routes = [
   {
     path: 'question/:day',
     component: QuestionView
+  },
+  {
+    path: 'prize',
+    component: Prize
   },
   {
     path: 'admin',

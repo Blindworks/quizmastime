@@ -267,6 +267,15 @@
   height: 100px;
   background: rgba(255, 255, 255, 0.05);
   z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .test-popup-button {
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
 }
 
 @keyframes pulse {
