@@ -7,7 +7,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { User } from '../../models/user';
 import { UserQuestionService, UserQuestion } from '../../services/user-question.service';
+import { CalendarSettingsService } from '../../services/calendar-settings.service';
+import { CalendarSettings } from '../../models/calendar-settings';
 import { CongratulationsDialog } from '../congratulations-dialog/congratulations-dialog';
+import { forkJoin } from 'rxjs';
 
 interface CalendarDay {
   day: number;
@@ -34,12 +37,14 @@ export class AdventCalendar implements OnInit {
   calendarDays: CalendarDay[] = [];
   currentDate: Date = new Date();
   userQuestions: UserQuestion[] = [];
+  calendarSettings: CalendarSettings[] = [];
   hasImageError: boolean = false;
   hasLogoutImageError: boolean = false;
 
   constructor(
     private router: Router,
     private userQuestionService: UserQuestionService,
+    private calendarSettingsService: CalendarSettingsService,
     private dialog: MatDialog
   ) {}
 
@@ -64,13 +69,18 @@ export class AdventCalendar implements OnInit {
       return;
     }
 
-    this.userQuestionService.getUserQuestionsByUserId(this.currentUser.id).subscribe({
-      next: (userQuestions) => {
-        this.userQuestions = userQuestions;
+    // Load both user questions and calendar settings in parallel
+    forkJoin({
+      userQuestions: this.userQuestionService.getUserQuestionsByUserId(this.currentUser.id),
+      calendarSettings: this.calendarSettingsService.getAllCalendarSettings()
+    }).subscribe({
+      next: (result) => {
+        this.userQuestions = result.userQuestions;
+        this.calendarSettings = result.calendarSettings;
         this.initializeCalendar();
       },
       error: (error) => {
-        console.error('Fehler beim Laden der User-Fragen:', error);
+        console.error('Fehler beim Laden der Daten:', error);
         this.initializeCalendar();
       }
     });
@@ -84,9 +94,17 @@ export class AdventCalendar implements OnInit {
     const isDecember = currentMonth === 11;
 
     for (let day = 1; day <= 24; day++) {
-      // Im Dezember: Tage bis heute freischalten
-      // Außerhalb Dezember (für Tests): Mindestens Tag 1 freischalten
-      const isUnlocked = isDecember ? (day <= today) : (day === 1);
+      // Check if day is unlocked in backend settings
+      const calendarSetting = this.calendarSettings.find(cs => cs.day === day);
+      let isUnlocked = false;
+
+      if (calendarSetting) {
+        // If settings exist in backend, use them
+        isUnlocked = calendarSetting.unlocked;
+      } else {
+        // Fallback to date-based logic if no backend settings
+        isUnlocked = isDecember ? (day <= today) : (day === 1);
+      }
 
       // Check if this day has been answered correctly
       const userQuestion = this.userQuestions.find(uq => uq.day === day);

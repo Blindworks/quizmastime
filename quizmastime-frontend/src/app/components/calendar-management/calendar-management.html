@@ -1,0 +1,67 @@
+<div class="calendar-management-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Kalender Freischaltung</mat-card-title>
+      <mat-card-subtitle>
+        Verwalten Sie, welche Türchen freigeschaltet sind
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Statistics -->
+      <div class="statistics">
+        <div class="stat-item">
+          <mat-icon class="unlocked-icon">lock_open</mat-icon>
+          <span class="stat-label">Freigeschaltet:</span>
+          <span class="stat-value">{{ getUnlockedCount() }} / 24</span>
+        </div>
+        <div class="stat-item">
+          <mat-icon class="locked-icon">lock</mat-icon>
+          <span class="stat-label">Gesperrt:</span>
+          <span class="stat-value">{{ getLockedCount() }} / 24</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button mat-raised-button color="primary" (click)="unlockAllDays()" [disabled]="loading">
+          <mat-icon>lock_open</mat-icon>
+          Alle freischalten
+        </button>
+        <button mat-raised-button color="warn" (click)="lockAllDays()" [disabled]="loading">
+          <mat-icon>lock</mat-icon>
+          Alle sperren
+        </button>
+        <button mat-raised-button (click)="resetToDefault()" [disabled]="loading">
+          <mat-icon>refresh</mat-icon>
+          Zurücksetzen
+        </button>
+      </div>
+
+      <!-- Days Grid -->
+      <div class="days-grid" *ngIf="!loading">
+        <div
+          *ngFor="let setting of calendarSettings"
+          class="day-item"
+          [class.unlocked]="setting.unlocked"
+          [class.locked]="!setting.unlocked"
+          (click)="toggleDay(setting.day)"
+          [matTooltip]="setting.unlocked ? 'Klicken zum Sperren' : 'Klicken zum Freischalten'">
+
+          <div class="day-number">{{ setting.day }}</div>
+          <mat-icon class="day-status-icon">
+            {{ setting.unlocked ? 'lock_open' : 'lock' }}
+          </mat-icon>
+          <div class="day-label">
+            {{ setting.unlocked ? 'Frei' : 'Gesperrt' }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading Indicator -->
+      <div class="loading-container" *ngIf="loading">
+        <p>Laden...</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

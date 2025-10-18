@@ -7,6 +7,7 @@ import { QuestionForm } from '../question-form/question-form';
 import { QuestionList } from '../question-list/question-list';
 import { UserQuestionForm } from '../user-question-form/user-question-form';
 import { UserQuestionList } from '../user-question-list/user-question-list';
+import { CalendarManagement } from '../calendar-management/calendar-management';
 import { Question } from '../../models/question';
 
 @Component({
@@ -19,7 +20,8 @@ import { Question } from '../../models/question';
     QuestionForm,
     QuestionList,
     UserQuestionForm,
-    UserQuestionList
+    UserQuestionList,
+    CalendarManagement
   ],
   templateUrl: './admin.html',
   styleUrl: './admin.scss'
