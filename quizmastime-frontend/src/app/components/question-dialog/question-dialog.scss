@@ -1,0 +1,46 @@
+mat-dialog-content {
+  min-width: 500px;
+  padding: 20px;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .full-width {
+      width: 100%;
+    }
+
+    .correct-answer-section {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      padding: 15px;
+      background: #f5f5f5;
+      border-radius: 8px;
+
+      .correct-answer-label {
+        font-weight: 500;
+        font-size: 14px;
+        color: #666;
+      }
+
+      .correct-answer-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  }
+}
+
+mat-dialog-actions {
+  padding: 20px;
+  gap: 10px;
+}
+
+@media (max-width: 600px) {
+  mat-dialog-content {
+    min-width: 300px;
+  }
+}

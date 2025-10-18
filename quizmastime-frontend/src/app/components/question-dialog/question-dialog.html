@@ -1,0 +1,56 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Frage bearbeiten' : 'Neue Frage erstellen' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="questionForm">
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Fragetext</mat-label>
+      <textarea matInput formControlName="questionText" rows="3" required></textarea>
+      <mat-error *ngIf="questionForm.get('questionText')?.hasError('required')">
+        Fragetext ist erforderlich
+      </mat-error>
+      <mat-error *ngIf="questionForm.get('questionText')?.hasError('minlength')">
+        Frage muss mindestens 5 Zeichen lang sein
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Antwort 1</mat-label>
+      <input matInput formControlName="answer1" required>
+      <mat-error *ngIf="questionForm.get('answer1')?.hasError('required')">
+        Antwort 1 ist erforderlich
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Antwort 2</mat-label>
+      <input matInput formControlName="answer2" required>
+      <mat-error *ngIf="questionForm.get('answer2')?.hasError('required')">
+        Antwort 2 ist erforderlich
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Antwort 3</mat-label>
+      <input matInput formControlName="answer3" required>
+      <mat-error *ngIf="questionForm.get('answer3')?.hasError('required')">
+        Antwort 3 ist erforderlich
+      </mat-error>
+    </mat-form-field>
+
+    <div class="correct-answer-section">
+      <label class="correct-answer-label">Richtige Antwort:</label>
+      <mat-radio-group formControlName="correctAnswer" class="correct-answer-group">
+        <mat-radio-button [value]="1">Antwort 1</mat-radio-button>
+        <mat-radio-button [value]="2">Antwort 2</mat-radio-button>
+        <mat-radio-button [value]="3">Antwort 3</mat-radio-button>
+      </mat-radio-group>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Abbrechen</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!questionForm.valid">
+    {{ isEditMode ? 'Aktualisieren' : 'Erstellen' }}
+  </button>
+</mat-dialog-actions>

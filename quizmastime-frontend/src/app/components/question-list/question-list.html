@@ -3,6 +3,12 @@
     <mat-card-title>Questions</mat-card-title>
   </mat-card-header>
   <mat-card-content>
+    <div class="header-actions">
+      <button mat-raised-button color="primary" (click)="onCreateQuestion()">
+        <mat-icon>add</mat-icon>
+        Neue Frage erstellen
+      </button>
+    </div>
     <table mat-table [dataSource]="questions" class="mat-elevation-z8">
 
       <ng-container matColumnDef="questionText">

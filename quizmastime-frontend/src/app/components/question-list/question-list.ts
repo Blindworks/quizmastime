@@ -23,6 +23,7 @@ export class QuestionList implements OnInit {
   questions: Question[] = [];
   displayedColumns: string[] = ['questionText', 'answer1', 'answer2', 'answer3', 'correctAnswer', 'actions'];
   @Output() editQuestion = new EventEmitter<Question>();
+  @Output() createQuestion = new EventEmitter<void>();
 
   constructor(private questionService: QuestionService) {}
 
@@ -56,6 +57,10 @@ export class QuestionList implements OnInit {
 
   onEditQuestion(question: Question): void {
     this.editQuestion.emit(question);
+  }
+
+  onCreateQuestion(): void {
+    this.createQuestion.emit();
   }
 
   getCorrectAnswerText(question: Question): string {

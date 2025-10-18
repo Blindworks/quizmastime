@@ -4,11 +4,11 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialog } from '@angular/material/dialog';
 import { UserForm } from '../user-form/user-form';
 import { UserList } from '../user-list/user-list';
-import { QuestionForm } from '../question-form/question-form';
 import { QuestionList } from '../question-list/question-list';
 import { UserQuestionList } from '../user-question-list/user-question-list';
 import { CalendarManagement } from '../calendar-management/calendar-management';
 import { UserQuestionDialog } from '../user-question-dialog/user-question-dialog';
+import { QuestionDialog } from '../question-dialog/question-dialog';
 import { Question } from '../../models/question';
 import { User } from '../../models/user';
 
@@ -19,7 +19,6 @@ import { User } from '../../models/user';
     MatTabsModule,
     UserForm,
     UserList,
-    QuestionForm,
     QuestionList,
     UserQuestionList,
     CalendarManagement
@@ -31,10 +30,8 @@ export class Admin {
   @ViewChild(UserList) userList!: UserList;
   @ViewChild(UserForm) userForm!: UserForm;
   @ViewChild(QuestionList) questionList!: QuestionList;
-  @ViewChild(QuestionForm) questionForm!: QuestionForm;
   @ViewChild(UserQuestionList) userQuestionList!: UserQuestionList;
 
-  questionToEdit: Question | null = null;
   userToEdit: User | null = null;
 
   constructor(private dialog: MatDialog) {}
@@ -60,33 +57,42 @@ export class Admin {
     }, 0);
   }
 
-  onQuestionCreated(): void {
-    if (this.questionList) {
-      this.questionList.loadQuestions();
-    }
-    // Reload user-question list to show the new question in assignments
-    if (this.userQuestionList) {
-      this.userQuestionList.loadUserQuestions();
-    }
-  }
+  onCreateQuestion(): void {
+    const dialogRef = this.dialog.open(QuestionDialog, {
+      width: '600px',
+      data: {}
+    });
 
-  onQuestionUpdated(): void {
-    if (this.questionList) {
-      this.questionList.loadQuestions();
-    }
-    // Reload user-question list to show updated question text
-    if (this.userQuestionList) {
-      this.userQuestionList.loadUserQuestions();
-    }
-    this.questionToEdit = null;
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.success) {
+        if (this.questionList) {
+          this.questionList.loadQuestions();
+        }
+        // Reload user-question list to show the new question in assignments
+        if (this.userQuestionList) {
+          this.userQuestionList.loadUserQuestions();
+        }
+      }
+    });
   }
 
   onEditQuestion(question: Question): void {
-    // Reset to null first to trigger ngOnChanges
-    this.questionToEdit = null;
-    setTimeout(() => {
-      this.questionToEdit = { ...question };
-    }, 0);
+    const dialogRef = this.dialog.open(QuestionDialog, {
+      width: '600px',
+      data: { question: { ...question } }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.success) {
+        if (this.questionList) {
+          this.questionList.loadQuestions();
+        }
+        // Reload user-question list to show updated question text
+        if (this.userQuestionList) {
+          this.userQuestionList.loadUserQuestions();
+        }
+      }
+    });
   }
 
   onAssignUserQuestion(data: {user: User, day: number, userQuestion?: any}): void {
