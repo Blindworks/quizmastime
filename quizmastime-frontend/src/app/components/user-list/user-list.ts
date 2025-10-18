@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { UserService } from '../../services/user';
 import { User } from '../../models/user';
 
@@ -14,7 +15,8 @@ import { User } from '../../models/user';
     MatTableModule,
     MatButtonModule,
     MatIconModule,
-    MatCardModule
+    MatCardModule,
+    MatTooltipModule
   ],
   templateUrl: './user-list.html',
   styleUrl: './user-list.scss'
@@ -22,6 +24,7 @@ import { User } from '../../models/user';
 export class UserList implements OnInit {
   users: User[] = [];
   displayedColumns: string[] = ['firstName', 'lastName', 'birthDate', 'email', 'actions'];
+  @Output() editUser = new EventEmitter<User>();
 
   constructor(private userService: UserService) {}
 
@@ -38,6 +41,10 @@ export class UserList implements OnInit {
         console.error('Error loading users:', error);
       }
     });
+  }
+
+  onEditUser(user: User): void {
+    this.editUser.emit(user);
   }
 
   deleteUser(id: number | undefined): void {

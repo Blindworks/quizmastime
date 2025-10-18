@@ -1,6 +1,6 @@
 <mat-card>
   <mat-card-header>
-    <mat-card-title>Create New User</mat-card-title>
+    <mat-card-title>{{ isEditMode ? 'Edit User' : 'Create New User' }}</mat-card-title>
   </mat-card-header>
   <mat-card-content>
     <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
@@ -47,9 +47,14 @@
         </mat-error>
       </mat-form-field>
 
-      <button mat-raised-button color="primary" type="submit" [disabled]="!userForm.valid">
-        Create User
-      </button>
+      <div class="button-group">
+        <button mat-raised-button color="primary" type="submit" [disabled]="!userForm.valid">
+          {{ isEditMode ? 'Update User' : 'Create User' }}
+        </button>
+        <button mat-raised-button type="button" (click)="cancelEdit()" *ngIf="isEditMode">
+          Cancel
+        </button>
+      </div>
     </form>
   </mat-card-content>
 </mat-card>

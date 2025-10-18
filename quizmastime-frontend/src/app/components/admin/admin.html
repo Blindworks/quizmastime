@@ -4,8 +4,12 @@
   <mat-tab-group>
     <mat-tab label="User Management">
       <div class="tab-content">
-        <app-user-form (userCreated)="onUserCreated()"></app-user-form>
-        <app-user-list></app-user-list>
+        <app-user-form
+          [userToEdit]="userToEdit"
+          (userCreated)="onUserCreated()"
+          (userUpdated)="onUserUpdated()">
+        </app-user-form>
+        <app-user-list (editUser)="onEditUser($event)"></app-user-list>
       </div>
     </mat-tab>
 

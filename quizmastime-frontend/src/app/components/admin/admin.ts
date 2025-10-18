@@ -9,6 +9,7 @@ import { UserQuestionForm } from '../user-question-form/user-question-form';
 import { UserQuestionList } from '../user-question-list/user-question-list';
 import { CalendarManagement } from '../calendar-management/calendar-management';
 import { Question } from '../../models/question';
+import { User } from '../../models/user';
 
 @Component({
   selector: 'app-admin',
@@ -28,16 +29,33 @@ import { Question } from '../../models/question';
 })
 export class Admin {
   @ViewChild(UserList) userList!: UserList;
+  @ViewChild(UserForm) userForm!: UserForm;
   @ViewChild(QuestionList) questionList!: QuestionList;
   @ViewChild(QuestionForm) questionForm!: QuestionForm;
   @ViewChild(UserQuestionList) userQuestionList!: UserQuestionList;
 
   questionToEdit: Question | null = null;
+  userToEdit: User | null = null;
 
   onUserCreated(): void {
     if (this.userList) {
       this.userList.loadUsers();
     }
+  }
+
+  onUserUpdated(): void {
+    if (this.userList) {
+      this.userList.loadUsers();
+    }
+    this.userToEdit = null;
+  }
+
+  onEditUser(user: User): void {
+    // Reset to null first to trigger ngOnChanges
+    this.userToEdit = null;
+    setTimeout(() => {
+      this.userToEdit = { ...user };
+    }, 0);
   }
 
   onQuestionCreated(): void {
