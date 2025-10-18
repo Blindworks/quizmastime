@@ -1,57 +1,274 @@
-table {
-  width: 100%;
+.user-question-container {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  mat-card {
+    margin-bottom: 20px;
+  }
 }
 
-mat-card {
-  margin: 20px;
+.user-selection {
+  margin-bottom: 30px;
+
+  .user-select {
+    width: 100%;
+    max-width: 400px;
+  }
 }
 
-.question-cell {
-  max-width: 300px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.no-selection {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 20px;
+    color: #999;
+  }
+
+  p {
+    font-size: 18px;
+    margin: 0;
+  }
 }
 
-// Lockout status styling
-.lockout-active {
-  color: #ff9800;
-  font-weight: bold;
-  background-color: rgba(255, 152, 0, 0.1);
-  padding: 8px;
-  border-radius: 4px;
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+
+  .day-item {
+    aspect-ratio: 1;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 15px;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .day-number {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .day-status-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+      margin-bottom: 8px;
+    }
+
+    .day-label {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    &.answered {
+      background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
+      border-color: #4caf50;
+
+      .day-number, .day-status-icon, .day-label {
+        color: #2e7d32;
+      }
+    }
+
+    &.locked-out {
+      background: linear-gradient(135deg, #ffcdd2 0%, #ef9a9a 100%);
+      border-color: #f44336;
+
+      .day-number, .day-status-icon, .day-label {
+        color: #c62828;
+      }
+    }
+
+    &.has-errors {
+      background: linear-gradient(135deg, #ffe0b2 0%, #ffcc80 100%);
+      border-color: #ff9800;
+
+      .day-number, .day-status-icon, .day-label {
+        color: #e65100;
+      }
+    }
+
+    &.assigned {
+      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+      border-color: #2196f3;
+
+      .day-number, .day-status-icon, .day-label {
+        color: #1565c0;
+      }
+    }
+
+    &.not-assigned {
+      background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+      border-color: #9e9e9e;
+
+      .day-number, .day-status-icon, .day-label {
+        color: #616161;
+      }
+    }
+  }
 }
 
-.lockout-expired {
-  color: #f44336;
-  font-weight: 500;
+.day-details-card {
+  mat-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+
+    .close-button {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+  }
+
+  .detail-section {
+    margin-bottom: 30px;
+
+    h3 {
+      color: #1976d2;
+      margin-bottom: 15px;
+      font-size: 20px;
+    }
+
+    h4 {
+      color: #666;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .question-text {
+      font-size: 18px;
+      font-weight: 500;
+      color: #333;
+      padding: 15px;
+      background: #f5f5f5;
+      border-radius: 8px;
+      border-left: 4px solid #1976d2;
+    }
+
+    .answers {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .answer-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+
+        .answer-number {
+          font-weight: bold;
+          color: #666;
+          min-width: 30px;
+        }
+
+        &.correct {
+          background: #e8f5e9;
+          border-color: #4caf50;
+
+          .correct-icon {
+            color: #4caf50;
+            margin-left: auto;
+          }
+        }
+      }
+    }
+
+    .status-info {
+      .info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px;
+        border-bottom: 1px solid #e0e0e0;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .label {
+          font-weight: 500;
+          color: #666;
+        }
+
+        .value {
+          font-weight: 600;
+          color: #333;
+
+          &.success {
+            color: #4caf50;
+          }
+
+          &.warning {
+            color: #ff9800;
+          }
+        }
+      }
+    }
+
+    .no-assignment {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+
+      mat-icon {
+        font-size: 64px;
+        width: 64px;
+        height: 64px;
+        margin-bottom: 15px;
+      }
+
+      p {
+        font-size: 16px;
+        margin: 0;
+      }
+    }
+  }
 }
 
-.lockout-success {
-  color: #4caf50;
-  font-weight: 500;
-}
+// Responsive adjustments
+@media (max-width: 768px) {
+  .days-grid {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 10px;
 
-// Edit overlay styling
-.edit-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
+    .day-item {
+      padding: 10px;
 
-.edit-dialog {
-  max-width: 600px;
-  width: 90%;
-  max-height: 90vh;
-  overflow-y: auto;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      .day-number {
+        font-size: 24px;
+      }
+
+      .day-status-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+
+      .day-label {
+        font-size: 12px;
+      }
+    }
+  }
 }

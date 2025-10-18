@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
+import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
 import { UserQuestionService } from '../../services/user-question';
 import { UserService } from '../../services/user';
 import { QuestionService } from '../../services/question';
@@ -11,34 +14,39 @@ import { UserQuestion } from '../../models/user-question';
 import { User } from '../../models/user';
 import { Question } from '../../models/question';
 import { forkJoin } from 'rxjs';
-import { UserQuestionForm } from '../user-question-form/user-question-form';
 
-interface UserQuestionDisplay extends UserQuestion {
-  userName?: string;
-  questionText?: string;
-  isLockedOut?: boolean;
-  lockoutRemainingMinutes?: number;
+interface DayInfo {
+  day: number;
+  userQuestion?: UserQuestion;
+  question?: Question;
+  isAnswered: boolean;
+  isLockedOut: boolean;
+  lockoutRemainingMinutes: number;
+  wrongAttempts: number;
 }
 
 @Component({
   selector: 'app-user-question-list',
   imports: [
     CommonModule,
-    MatTableModule,
+    MatSelectModule,
     MatButtonModule,
     MatIconModule,
     MatCardModule,
-    UserQuestionForm
+    MatTooltipModule,
+    MatFormFieldModule,
+    FormsModule
   ],
   templateUrl: './user-question-list.html',
   styleUrl: './user-question-list.scss'
 })
 export class UserQuestionList implements OnInit {
-  userQuestions: UserQuestionDisplay[] = [];
-  displayedColumns: string[] = ['userName', 'questionText', 'day', 'wrongAttempts', 'lastWrongAnswer', 'lockoutStatus', 'correctAnswerDate', 'actions'];
-  lockoutDurationMinutes: number = 30; // Should match backend configuration
-  editingUserQuestion: UserQuestion | null = null;
-  showEditForm: boolean = false;
+  users: User[] = [];
+  questions: Question[] = [];
+  selectedUser: User | null = null;
+  daysInfo: DayInfo[] = [];
+  selectedDay: DayInfo | null = null;
+  lockoutDurationMinutes: number = 30;
 
   constructor(
     private userQuestionService: UserQuestionService,
@@ -47,80 +55,89 @@ export class UserQuestionList implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadUserQuestions();
+    this.loadInitialData();
   }
 
-  loadUserQuestions(): void {
-    // First, get all users and questions
+  loadInitialData(): void {
     forkJoin({
       users: this.userService.getAllUsers(),
       questions: this.questionService.getAllQuestions()
     }).subscribe({
       next: ({ users, questions }) => {
-        // Create maps for quick lookup
-        const userMap = new Map<number, User>();
-        users.forEach(user => {
-          if (user.id) userMap.set(user.id, user);
-        });
-
-        const questionMap = new Map<number, Question>();
-        questions.forEach(question => {
-          if (question.id) questionMap.set(question.id, question);
-        });
-
-        // Now get all user questions and enhance them with user and question details
-        // Since there's no "get all" endpoint, we'll need to get them per user
-        const userQuestionRequests = users.map(user =>
-          this.userQuestionService.getUserQuestionsByUserId(user.id!)
-        );
-
-        forkJoin(userQuestionRequests).subscribe({
-          next: (results) => {
-            this.userQuestions = [];
-            results.forEach(userQuestionArray => {
-              userQuestionArray.forEach(uq => {
-                const user = userMap.get(uq.userId);
-                const question = questionMap.get(uq.questionId);
-
-                const lockoutInfo = this.calculateLockoutStatus(uq);
-                this.userQuestions.push({
-                  ...uq,
-                  userName: user ? `${user.firstName} ${user.lastName}` : 'Unknown',
-                  questionText: question ? question.questionText : 'Unknown',
-                  isLockedOut: lockoutInfo.isLockedOut,
-                  lockoutRemainingMinutes: lockoutInfo.remainingMinutes
-                });
-              });
-            });
-
-            // Sort by user name and day
-            this.userQuestions.sort((a, b) => {
-              const userCompare = (a.userName || '').localeCompare(b.userName || '');
-              if (userCompare !== 0) return userCompare;
-              return a.day - b.day;
-            });
-          },
-          error: (error) => {
-            console.error('Error loading user questions:', error);
-          }
-        });
+        this.users = users;
+        this.questions = questions;
       },
       error: (error) => {
-        console.error('Error loading users or questions:', error);
+        console.error('Error loading initial data:', error);
       }
     });
   }
 
-  deleteUserQuestion(id: number | undefined): void {
-    if (id && confirm('Are you sure you want to delete this assignment?')) {
-      this.userQuestionService.deleteUserQuestion(id).subscribe({
-        next: () => {
-          this.loadUserQuestions();
-        },
-        error: (error) => {
-          console.error('Error deleting user question:', error);
-        }
+  onUserSelected(): void {
+    if (!this.selectedUser || !this.selectedUser.id) {
+      this.daysInfo = [];
+      this.selectedDay = null;
+      return;
+    }
+
+    console.log('User selected:', this.selectedUser);
+
+    this.userQuestionService.getUserQuestionsByUserId(this.selectedUser.id).subscribe({
+      next: (userQuestions) => {
+        console.log('User questions loaded:', userQuestions);
+        this.buildDaysInfo(userQuestions);
+        this.selectedDay = null;
+      },
+      error: (error) => {
+        console.error('Error loading user questions:', error);
+        // Even if there's an error, build the grid with empty data
+        this.buildDaysInfo([]);
+      }
+    });
+  }
+
+  buildDaysInfo(userQuestions: UserQuestion[]): void {
+    this.daysInfo = [];
+
+    console.log('Building days info with', userQuestions.length, 'user questions');
+    console.log('Available questions:', this.questions.length);
+
+    for (let day = 1; day <= 24; day++) {
+      const userQuestion = userQuestions.find(uq => uq.day === day);
+      const question = userQuestion ? this.questions.find(q => q.id === userQuestion.questionId) : undefined;
+
+      const lockoutInfo = userQuestion ? this.calculateLockoutStatus(userQuestion) : { isLockedOut: false, remainingMinutes: 0 };
+
+      this.daysInfo.push({
+        day,
+        userQuestion,
+        question,
+        isAnswered: userQuestion?.correctAnswerDate != null,
+        isLockedOut: lockoutInfo.isLockedOut,
+        lockoutRemainingMinutes: lockoutInfo.remainingMinutes,
+        wrongAttempts: userQuestion?.wrongAttempts || 0
       });
+    }
+
+    console.log('Days info built:', this.daysInfo.length, 'days');
+  }
+
+  onDayClick(dayInfo: DayInfo): void {
+    this.selectedDay = dayInfo;
+  }
+
+  closeDayDetails(): void {
+    this.selectedDay = null;
+  }
+
+  // Method for admin component to reload data
+  loadUserQuestions(): void {
+    // Reload initial data (users and questions)
+    this.loadInitialData();
+
+    // If a user is selected, reload their questions
+    if (this.selectedUser && this.selectedUser.id) {
+      this.onUserSelected();
     }
   }
 
@@ -156,35 +173,39 @@ export class UserQuestionList implements OnInit {
     return { isLockedOut: false, remainingMinutes: 0 };
   }
 
-  getLockoutStatusText(uq: UserQuestionDisplay): string {
-    if (uq.correctAnswerDate) {
-      return '✓ Beantwortet';
+  getDayStatusClass(dayInfo: DayInfo): string[] {
+    const classes = ['day-item'];
+
+    if (dayInfo.isAnswered) {
+      classes.push('answered');
+    } else if (dayInfo.userQuestion) {
+      if (dayInfo.isLockedOut) {
+        classes.push('locked-out');
+      } else if (dayInfo.wrongAttempts > 0) {
+        classes.push('has-errors');
+      } else {
+        classes.push('assigned');
+      }
+    } else {
+      classes.push('not-assigned');
     }
 
-    if (uq.isLockedOut && uq.lockoutRemainingMinutes) {
-      return `🔒 Gesperrt (${uq.lockoutRemainingMinutes} Min)`;
-    }
-
-    if (uq.lastWrongAnswer && !uq.isLockedOut) {
-      return '⚠️ Falsch beantwortet';
-    }
-
-    return '-';
+    return classes;
   }
 
-  editUserQuestion(uq: UserQuestion): void {
-    this.editingUserQuestion = { ...uq };
-    this.showEditForm = true;
+  getDayStatusIcon(dayInfo: DayInfo): string {
+    if (dayInfo.isAnswered) return 'check_circle';
+    if (dayInfo.isLockedOut) return 'lock';
+    if (dayInfo.wrongAttempts > 0) return 'warning';
+    if (dayInfo.userQuestion) return 'assignment';
+    return 'assignment_late';
   }
 
-  onUserQuestionUpdated(): void {
-    this.showEditForm = false;
-    this.editingUserQuestion = null;
-    this.loadUserQuestions();
-  }
-
-  onEditCancelled(): void {
-    this.showEditForm = false;
-    this.editingUserQuestion = null;
+  getDayStatusText(dayInfo: DayInfo): string {
+    if (dayInfo.isAnswered) return 'Richtig beantwortet';
+    if (dayInfo.isLockedOut) return `Gesperrt (${dayInfo.lockoutRemainingMinutes} Min)`;
+    if (dayInfo.wrongAttempts > 0) return `${dayInfo.wrongAttempts} falsche Versuche`;
+    if (dayInfo.userQuestion) return 'Zugewiesen';
+    return 'Nicht zugewiesen';
   }
 }
