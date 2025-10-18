@@ -1,0 +1,45 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Frage bearbeiten' : 'Frage zuweisen' }} - Tag {{ data.day }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="userQuestionForm">
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Frage</mat-label>
+      <mat-select formControlName="questionId" required [disabled]="isEditMode">
+        <mat-option *ngFor="let question of questions" [value]="question.id">
+          {{ question.questionText }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="userQuestionForm.get('questionId')?.hasError('required')">
+        Frage ist erforderlich
+      </mat-error>
+    </mat-form-field>
+
+    <div *ngIf="isEditMode" class="edit-fields">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Falsche Versuche</mat-label>
+        <input matInput type="number" formControlName="wrongAttempts" min="0">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Letzter falscher Versuch</mat-label>
+        <input matInput type="datetime-local" formControlName="lastWrongAnswer">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Richtig beantwortet am</mat-label>
+        <input matInput type="datetime-local" formControlName="correctAnswerDate">
+      </mat-form-field>
+
+      <button mat-raised-button type="button" color="warn" (click)="clearWrongAnswer()" class="clear-button">
+        Sperre zurücksetzen
+      </button>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Abbrechen</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!userQuestionForm.valid">
+    {{ isEditMode ? 'Aktualisieren' : 'Zuweisen' }}
+  </button>
+</mat-dialog-actions>

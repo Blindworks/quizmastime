@@ -18,14 +18,6 @@
         </mat-form-field>
       </div>
 
-      <!-- Debug Info -->
-      <div *ngIf="selectedUser" style="padding: 10px; background: #f0f0f0; margin: 10px 0; border-radius: 4px;">
-        <p><strong>Debug:</strong></p>
-        <p>Selected User: {{ selectedUser.firstName }} {{ selectedUser.lastName }} (ID: {{ selectedUser.id }})</p>
-        <p>Days Info Length: {{ daysInfo.length }}</p>
-        <p>Questions Available: {{ questions.length }}</p>
-      </div>
-
       <!-- Calendar Grid -->
       <div class="days-grid" *ngIf="selectedUser && daysInfo.length > 0">
         <div
