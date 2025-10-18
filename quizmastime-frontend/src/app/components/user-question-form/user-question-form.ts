@@ -58,15 +58,28 @@ export class UserQuestionForm implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['userQuestion'] && this.userQuestion && this.editMode) {
-      this.userQuestionForm.patchValue({
-        userId: this.userQuestion.userId,
-        questionId: this.userQuestion.questionId,
-        day: this.userQuestion.day,
-        wrongAttempts: this.userQuestion.wrongAttempts || 0,
-        lastWrongAnswer: this.formatDateTimeForInput(this.userQuestion.lastWrongAnswer),
-        correctAnswerDate: this.formatDateTimeForInput(this.userQuestion.correctAnswerDate)
-      });
+    if (changes['userQuestion'] && this.userQuestion) {
+      if (this.editMode) {
+        // Edit mode - populate all fields including questionId
+        this.userQuestionForm.patchValue({
+          userId: this.userQuestion.userId,
+          questionId: this.userQuestion.questionId,
+          day: this.userQuestion.day,
+          wrongAttempts: this.userQuestion.wrongAttempts || 0,
+          lastWrongAnswer: this.formatDateTimeForInput(this.userQuestion.lastWrongAnswer),
+          correctAnswerDate: this.formatDateTimeForInput(this.userQuestion.correctAnswerDate)
+        });
+      } else {
+        // Create mode - populate user and day, leave question empty for selection
+        this.userQuestionForm.patchValue({
+          userId: this.userQuestion.userId,
+          questionId: this.userQuestion.questionId || '',
+          day: this.userQuestion.day,
+          wrongAttempts: this.userQuestion.wrongAttempts || 0,
+          lastWrongAnswer: this.formatDateTimeForInput(this.userQuestion.lastWrongAnswer),
+          correctAnswerDate: this.formatDateTimeForInput(this.userQuestion.correctAnswerDate)
+        });
+      }
     }
   }
 
@@ -177,6 +190,8 @@ export class UserQuestionForm implements OnInit, OnChanges {
 
   onCancel(): void {
     this.userQuestionForm.reset();
+    this.userQuestion = null;
+    this.editMode = false;
     this.cancelled.emit();
   }
 

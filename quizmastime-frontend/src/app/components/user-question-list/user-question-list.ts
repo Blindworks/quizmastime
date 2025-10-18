@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
@@ -47,6 +47,8 @@ export class UserQuestionList implements OnInit {
   daysInfo: DayInfo[] = [];
   selectedDay: DayInfo | null = null;
   lockoutDurationMinutes: number = 30;
+
+  @Output() assignUserQuestion = new EventEmitter<{user: User, day: number, userQuestion?: UserQuestion}>();
 
   constructor(
     private userQuestionService: UserQuestionService,
@@ -124,6 +126,15 @@ export class UserQuestionList implements OnInit {
 
   onDayClick(dayInfo: DayInfo): void {
     this.selectedDay = dayInfo;
+
+    // Emit event to populate the form above
+    if (this.selectedUser) {
+      this.assignUserQuestion.emit({
+        user: this.selectedUser,
+        day: dayInfo.day,
+        userQuestion: dayInfo.userQuestion
+      });
+    }
   }
 
   closeDayDetails(): void {

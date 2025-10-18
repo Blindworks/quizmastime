@@ -26,8 +26,17 @@
 
     <mat-tab label="User Questions">
       <div class="tab-content">
-        <app-user-question-form (userQuestionCreated)="onUserQuestionCreated()"></app-user-question-form>
-        <app-user-question-list></app-user-question-list>
+        <app-user-question-form
+          #userQuestionFormRef
+          [editMode]="!!userQuestionToEdit?.id"
+          [userQuestion]="userQuestionToEdit"
+          (userQuestionCreated)="onUserQuestionCreated()"
+          (userQuestionUpdated)="onUserQuestionUpdated()"
+          (cancelled)="userQuestionToEdit = null">
+        </app-user-question-form>
+        <app-user-question-list
+          (assignUserQuestion)="onAssignUserQuestion($event)">
+        </app-user-question-list>
       </div>
     </mat-tab>
 

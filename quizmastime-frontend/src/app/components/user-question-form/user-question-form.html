@@ -6,7 +6,7 @@
     <form [formGroup]="userQuestionForm" (ngSubmit)="onSubmit()">
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>User</mat-label>
-        <mat-select formControlName="userId" required [disabled]="editMode">
+        <mat-select formControlName="userId" required [disabled]="userQuestion !== null">
           <mat-option *ngFor="let user of users" [value]="user.id">
             {{ user.firstName }} {{ user.lastName }}
           </mat-option>
@@ -30,7 +30,7 @@
 
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Day (1-24)</mat-label>
-        <mat-select formControlName="day" required>
+        <mat-select formControlName="day" required [disabled]="userQuestion !== null">
           <mat-option *ngFor="let day of days" [value]="day">
             {{ day }}
           </mat-option>

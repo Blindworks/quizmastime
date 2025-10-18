@@ -33,9 +33,11 @@ export class Admin {
   @ViewChild(QuestionList) questionList!: QuestionList;
   @ViewChild(QuestionForm) questionForm!: QuestionForm;
   @ViewChild(UserQuestionList) userQuestionList!: UserQuestionList;
+  @ViewChild('userQuestionFormRef') userQuestionFormRef!: any;
 
   questionToEdit: Question | null = null;
   userToEdit: User | null = null;
+  userQuestionToEdit: any = null;
 
   onUserCreated(): void {
     if (this.userList) {
@@ -91,5 +93,45 @@ export class Admin {
     if (this.userQuestionList) {
       this.userQuestionList.loadUserQuestions();
     }
+    // Reset the form after creation
+    setTimeout(() => {
+      this.userQuestionToEdit = null;
+    }, 100);
+  }
+
+  onUserQuestionUpdated(): void {
+    if (this.userQuestionList) {
+      this.userQuestionList.loadUserQuestions();
+    }
+    // Reset the form after update
+    setTimeout(() => {
+      this.userQuestionToEdit = null;
+    }, 100);
+  }
+
+  onAssignUserQuestion(data: {user: User, day: number, userQuestion?: any}): void {
+    // Create or edit mode based on whether userQuestion exists
+    if (data.userQuestion) {
+      // Edit mode - existing assignment
+      this.userQuestionToEdit = { ...data.userQuestion };
+    } else {
+      // Create mode - new assignment
+      this.userQuestionToEdit = {
+        userId: data.user.id,
+        day: data.day,
+        questionId: null,
+        wrongAttempts: 0,
+        lastWrongAnswer: null,
+        correctAnswerDate: null
+      };
+    }
+
+    // Scroll to the form
+    setTimeout(() => {
+      const formElement = document.querySelector('app-user-question-form');
+      if (formElement) {
+        formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
   }
 }
