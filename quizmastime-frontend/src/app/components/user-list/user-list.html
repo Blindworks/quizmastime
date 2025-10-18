@@ -3,6 +3,12 @@
     <mat-card-title>Users</mat-card-title>
   </mat-card-header>
   <mat-card-content>
+    <div class="header-actions">
+      <button mat-raised-button color="primary" (click)="onCreateUser()">
+        <mat-icon>add</mat-icon>
+        Neuen Benutzer erstellen
+      </button>
+    </div>
     <table mat-table [dataSource]="users" class="mat-elevation-z8">
 
       <ng-container matColumnDef="firstName">

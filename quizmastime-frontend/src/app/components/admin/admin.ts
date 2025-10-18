@@ -2,13 +2,13 @@ import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialog } from '@angular/material/dialog';
-import { UserForm } from '../user-form/user-form';
 import { UserList } from '../user-list/user-list';
 import { QuestionList } from '../question-list/question-list';
 import { UserQuestionList } from '../user-question-list/user-question-list';
 import { CalendarManagement } from '../calendar-management/calendar-management';
 import { UserQuestionDialog } from '../user-question-dialog/user-question-dialog';
 import { QuestionDialog } from '../question-dialog/question-dialog';
+import { UserDialog } from '../user-dialog/user-dialog';
 import { Question } from '../../models/question';
 import { User } from '../../models/user';
 
@@ -17,7 +17,6 @@ import { User } from '../../models/user';
   imports: [
     CommonModule,
     MatTabsModule,
-    UserForm,
     UserList,
     QuestionList,
     UserQuestionList,
@@ -28,33 +27,39 @@ import { User } from '../../models/user';
 })
 export class Admin {
   @ViewChild(UserList) userList!: UserList;
-  @ViewChild(UserForm) userForm!: UserForm;
   @ViewChild(QuestionList) questionList!: QuestionList;
   @ViewChild(UserQuestionList) userQuestionList!: UserQuestionList;
 
-  userToEdit: User | null = null;
-
   constructor(private dialog: MatDialog) {}
 
-  onUserCreated(): void {
-    if (this.userList) {
-      this.userList.loadUsers();
-    }
-  }
+  onCreateUser(): void {
+    const dialogRef = this.dialog.open(UserDialog, {
+      width: '600px',
+      data: {}
+    });
 
-  onUserUpdated(): void {
-    if (this.userList) {
-      this.userList.loadUsers();
-    }
-    this.userToEdit = null;
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.success) {
+        if (this.userList) {
+          this.userList.loadUsers();
+        }
+      }
+    });
   }
 
   onEditUser(user: User): void {
-    // Reset to null first to trigger ngOnChanges
-    this.userToEdit = null;
-    setTimeout(() => {
-      this.userToEdit = { ...user };
-    }, 0);
+    const dialogRef = this.dialog.open(UserDialog, {
+      width: '600px',
+      data: { user: { ...user } }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.success) {
+        if (this.userList) {
+          this.userList.loadUsers();
+        }
+      }
+    });
   }
 
   onCreateQuestion(): void {

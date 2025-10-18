@@ -25,6 +25,7 @@ export class UserList implements OnInit {
   users: User[] = [];
   displayedColumns: string[] = ['firstName', 'lastName', 'birthDate', 'email', 'actions'];
   @Output() editUser = new EventEmitter<User>();
+  @Output() createUser = new EventEmitter<void>();
 
   constructor(private userService: UserService) {}
 
@@ -45,6 +46,10 @@ export class UserList implements OnInit {
 
   onEditUser(user: User): void {
     this.editUser.emit(user);
+  }
+
+  onCreateUser(): void {
+    this.createUser.emit();
   }
 
   deleteUser(id: number | undefined): void {
