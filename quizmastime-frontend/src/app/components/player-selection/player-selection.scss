@@ -4,15 +4,32 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 2rem;
+  padding: 0.5rem 2rem 2rem 2rem;
   box-sizing: border-box;
 }
 
 .game-logo {
-  margin-bottom: 3rem;
+  margin-bottom: 0.5rem;
   text-align: center;
+
+  .logo-image {
+    max-width: 400px;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
 
   h1 {
     color: white;
@@ -164,8 +181,14 @@
 
 // Tablet optimizations
 @media (min-width: 768px) and (max-width: 1024px) {
-  .game-logo h1 {
-    font-size: 5rem;
+  .game-logo {
+    .logo-image {
+      max-width: 500px;
+    }
+
+    h1 {
+      font-size: 5rem;
+    }
   }
 
   .content-wrapper {
@@ -201,11 +224,19 @@
 // Mobile adjustments
 @media (max-width: 767px) {
   .player-selection-container {
-    padding: 1rem;
+    padding: 0.25rem 1rem 1rem 1rem;
   }
 
-  .game-logo h1 {
-    font-size: 2.5rem;
+  .game-logo {
+    margin-bottom: 0.5rem;
+
+    .logo-image {
+      max-width: 280px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+    }
   }
 
   .content-wrapper {
