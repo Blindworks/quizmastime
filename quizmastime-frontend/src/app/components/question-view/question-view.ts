@@ -6,7 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { QuestionService } from '../../services/question';
-import { UserQuestionService } from '../../services/user-question.service';
+import { UserQuestionService, UserQuestion } from '../../services/user-question.service';
 import { Question } from '../../models/question';
 import { User } from '../../models/user';
 import { AnswerSubmission } from '../../models/answer-submission';
@@ -66,8 +66,41 @@ export class QuestionView implements OnInit {
 
   loadQuestion(): void {
     this.loading = true;
-    // TODO: Frage für spezifischen Tag laden
-    // Für jetzt laden wir die erste Frage
+
+    // Load UserQuestion assignment for this day first
+    this.userQuestionService.getUserQuestionsByUserIdAndDay(this.currentUser!.id!, this.day).subscribe({
+      next: (userQuestions) => {
+        if (userQuestions && userQuestions.length > 0 && userQuestions[0].question) {
+          // Use the question from the UserQuestion assignment
+          const userQuestion = userQuestions[0];
+          this.question = {
+            id: userQuestion.question!.id,
+            questionText: userQuestion.question!.questionText,
+            answer1: userQuestion.question!.answer1,
+            answer2: userQuestion.question!.answer2,
+            answer3: userQuestion.question!.answer3,
+            correctAnswer: userQuestion.question!.correctAnswer
+          };
+          this.prepareAnswers();
+          // Check lockout status after question is loaded
+          this.checkLockoutStatus();
+          this.loading = false;
+        } else {
+          // Fallback: No UserQuestion assigned for this day, load all questions
+          console.warn('Keine UserQuestion-Zuweisung für Tag gefunden:', this.day);
+          this.loadQuestionFallback();
+        }
+      },
+      error: (error) => {
+        console.error('Fehler beim Laden der UserQuestion:', error);
+        // Fallback to old behavior
+        this.loadQuestionFallback();
+      }
+    });
+  }
+
+  loadQuestionFallback(): void {
+    // Fallback: Load all questions and use array index (old behavior)
     this.questionService.getAllQuestions().subscribe({
       next: (questions) => {
         if (questions && questions.length >= this.day) {
