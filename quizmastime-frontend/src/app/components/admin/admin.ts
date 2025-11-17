@@ -100,7 +100,7 @@ export class Admin {
     });
   }
 
-  onAssignUserQuestion(data: {user: User, day: number, userQuestion?: any}): void {
+  onAssignUserQuestion(data: {user: User, day: number, userQuestion?: any, assignedQuestionIds?: number[]}): void {
     // Open dialog with user question data
     const dialogRef = this.dialog.open(UserQuestionDialog, {
       width: '600px',
@@ -111,7 +111,8 @@ export class Admin {
         questionId: data.userQuestion?.questionId,
         wrongAttempts: data.userQuestion?.wrongAttempts,
         lastWrongAnswer: data.userQuestion?.lastWrongAnswer,
-        correctAnswerDate: data.userQuestion?.correctAnswerDate
+        correctAnswerDate: data.userQuestion?.correctAnswerDate,
+        assignedQuestionIds: data.assignedQuestionIds || []
       }
     });
 
