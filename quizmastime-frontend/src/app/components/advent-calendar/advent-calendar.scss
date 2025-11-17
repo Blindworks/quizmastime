@@ -199,6 +199,8 @@
 
   &.completed {
     background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+    border: 4px solid #4caf50;
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
 
     .day-number {
       color: white;
@@ -206,11 +208,17 @@
 
     .day-icon {
       color: white;
+    }
+
+    .day-icon-container .day-icon-image {
+      filter: sepia(20%) hue-rotate(80deg) saturate(120%);
     }
   }
 
   &.wrong-answer {
     background: linear-gradient(135deg, #f44336 0%, #ef5350 100%);
+    border: 4px solid #f44336;
+    box-shadow: 0 0 15px rgba(244, 67, 54, 0.5);
 
     .day-number {
       color: white;
@@ -218,6 +226,10 @@
 
     .day-icon {
       color: white;
+    }
+
+    .day-icon-container .day-icon-image {
+      filter: sepia(20%) hue-rotate(-30deg) saturate(150%);
     }
   }
 
