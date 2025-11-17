@@ -16,6 +16,7 @@ interface CalendarDay {
   day: number;
   isUnlocked: boolean;
   isCompleted: boolean;
+  hasWrongAnswer: boolean;
   isToday: boolean;
   iconPath: string;
 }
@@ -106,14 +107,16 @@ export class AdventCalendar implements OnInit {
         isUnlocked = isDecember ? (day <= today) : (day === 1);
       }
 
-      // Check if this day has been answered correctly
+      // Check if this day has been answered correctly or has wrong attempts
       const userQuestion = this.userQuestions.find(uq => uq.day === day);
       const isCompleted = userQuestion?.correctAnswerDate != null;
+      const hasWrongAnswer = userQuestion != null && userQuestion.wrongAttempts > 0 && !isCompleted;
 
       this.calendarDays.push({
         day: day,
         isUnlocked: isUnlocked,
         isCompleted: isCompleted,
+        hasWrongAnswer: hasWrongAnswer,
         isToday: isDecember && day === today,
         iconPath: `/assets/icons/day-${day}.png`
       });
@@ -182,6 +185,7 @@ export class AdventCalendar implements OnInit {
 
     if (calendarDay.isToday) classes.push('today');
     if (calendarDay.isCompleted) classes.push('completed');
+    if (calendarDay.hasWrongAnswer) classes.push('wrong-answer');
     if (!calendarDay.isUnlocked) classes.push('locked');
 
     return classes;
