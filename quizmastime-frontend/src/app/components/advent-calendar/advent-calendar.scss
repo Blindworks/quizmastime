@@ -209,6 +209,18 @@
     }
   }
 
+  &.wrong-answer {
+    background: linear-gradient(135deg, #f44336 0%, #ef5350 100%);
+
+    .day-number {
+      color: white;
+    }
+
+    .day-icon {
+      color: white;
+    }
+  }
+
   .day-icon-container {
     width: 100%;
     height: 100%;
@@ -250,6 +262,12 @@
     }
 
     &.completed-status {
+      bottom: 0.5rem;
+      right: 0.5rem;
+      color: white;
+    }
+
+    &.wrong-answer-status {
       bottom: 0.5rem;
       right: 0.5rem;
       color: white;

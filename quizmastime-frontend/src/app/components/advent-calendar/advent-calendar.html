@@ -52,6 +52,11 @@
           <mat-icon>check_circle</mat-icon>
         </div>
 
+        <!-- Wrong Answer Status -->
+        <div class="day-status wrong-answer-status" *ngIf="calendarDay.hasWrongAnswer">
+          <mat-icon>cancel</mat-icon>
+        </div>
+
         <!-- Locked Status -->
         <div class="day-status lock-status" *ngIf="!calendarDay.isUnlocked">
           <mat-icon>lock</mat-icon>
