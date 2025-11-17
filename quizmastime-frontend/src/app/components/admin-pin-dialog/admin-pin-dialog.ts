@@ -53,4 +53,18 @@ export class AdminPinDialog {
     this.pin = input.value;
     this.errorMessage = '';
   }
+
+  onNumpadClick(num: number): void {
+    if (this.pin.length < 4) {
+      this.pin += num.toString();
+      this.errorMessage = '';
+    }
+  }
+
+  onDeleteClick(): void {
+    if (this.pin.length > 0) {
+      this.pin = this.pin.slice(0, -1);
+      this.errorMessage = '';
+    }
+  }
 }
