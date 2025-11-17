@@ -19,6 +19,7 @@ export interface UserQuestionDialogData {
   wrongAttempts?: number;
   lastWrongAnswer?: string;
   correctAnswerDate?: string;
+  assignedQuestionIds?: number[];
 }
 
 @Component({
@@ -65,7 +66,17 @@ export class UserQuestionDialog implements OnInit {
   loadQuestions(): void {
     this.questionService.getAllQuestions().subscribe({
       next: (questions) => {
-        this.questions = questions;
+        // Filter out questions that are already assigned to this user
+        // Exception: if in edit mode, keep the currently assigned question
+        const assignedIds = this.data.assignedQuestionIds || [];
+        this.questions = questions.filter(q => {
+          // Always include the currently assigned question (for edit mode)
+          if (this.data.questionId && q.id === this.data.questionId) {
+            return true;
+          }
+          // Exclude questions that are already assigned to this user
+          return !assignedIds.includes(q.id!);
+        });
       },
       error: (error) => {
         console.error('Error loading questions:', error);

@@ -48,7 +48,7 @@ export class UserQuestionList implements OnInit {
   selectedDay: DayInfo | null = null;
   lockoutDurationMinutes: number = 30;
 
-  @Output() assignUserQuestion = new EventEmitter<{user: User, day: number, userQuestion?: UserQuestion}>();
+  @Output() assignUserQuestion = new EventEmitter<{user: User, day: number, userQuestion?: UserQuestion, assignedQuestionIds: number[]}>();
 
   constructor(
     private userQuestionService: UserQuestionService,
@@ -129,10 +129,16 @@ export class UserQuestionList implements OnInit {
 
     // Emit event to populate the form above
     if (this.selectedUser) {
+      // Get all assigned question IDs for this user
+      const assignedQuestionIds = this.daysInfo
+        .filter(di => di.userQuestion && di.userQuestion.questionId)
+        .map(di => di.userQuestion!.questionId);
+
       this.assignUserQuestion.emit({
         user: this.selectedUser,
         day: dayInfo.day,
-        userQuestion: dayInfo.userQuestion
+        userQuestion: dayInfo.userQuestion,
+        assignedQuestionIds
       });
     }
   }
