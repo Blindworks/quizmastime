@@ -8,16 +8,33 @@
     <input
       matInput
       type="password"
-      inputmode="numeric"
+      inputmode="none"
       maxlength="4"
       [value]="pin"
       (input)="onPinInput($event)"
       (keyup.enter)="onSubmit()"
       autocomplete="off"
-      autofocus
+      readonly
     >
     <mat-icon matSuffix>lock</mat-icon>
   </mat-form-field>
+
+  <div class="numpad">
+    @for (num of [1, 2, 3, 4, 5, 6, 7, 8, 9]; track num) {
+      <button mat-raised-button class="numpad-btn" (click)="onNumpadClick(num)">
+        {{ num }}
+      </button>
+    }
+    <button mat-raised-button class="numpad-btn delete-btn" (click)="onDeleteClick()">
+      <mat-icon>backspace</mat-icon>
+    </button>
+    <button mat-raised-button class="numpad-btn" (click)="onNumpadClick(0)">
+      0
+    </button>
+    <button mat-raised-button class="numpad-btn enter-btn" color="primary" (click)="onSubmit()" [disabled]="pin.length !== 4">
+      <mat-icon>check</mat-icon>
+    </button>
+  </div>
 
   @if (errorMessage) {
     <div class="error-message">
@@ -29,7 +46,4 @@
 
 <mat-dialog-actions align="end">
   <button mat-button (click)="onCancel()">Abbrechen</button>
-  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="pin.length !== 4">
-    Bestätigen
-  </button>
 </mat-dialog-actions>
