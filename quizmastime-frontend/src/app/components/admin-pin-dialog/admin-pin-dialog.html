@@ -1,49 +1,63 @@
-<h2 mat-dialog-title>Admin-Zugang</h2>
+<div class="dialog-header">
+  <mat-icon class="header-icon">admin_panel_settings</mat-icon>
+  <h2>Admin-Zugang</h2>
+</div>
 
 <mat-dialog-content>
-  <p>Bitte geben Sie den 4-stelligen PIN ein:</p>
-
-  <mat-form-field appearance="outline" class="pin-field">
-    <mat-label>PIN</mat-label>
-    <input
-      matInput
-      type="password"
-      inputmode="none"
-      maxlength="4"
-      [value]="pin"
-      (input)="onPinInput($event)"
-      (keyup.enter)="onSubmit()"
-      autocomplete="off"
-      readonly
-    >
-    <mat-icon matSuffix>lock</mat-icon>
-  </mat-form-field>
-
-  <div class="numpad">
-    @for (num of [1, 2, 3, 4, 5, 6, 7, 8, 9]; track num) {
-      <button mat-raised-button class="numpad-btn" (click)="onNumpadClick(num)">
-        {{ num }}
-      </button>
+  <div class="pin-display" role="status" [attr.aria-label]="'PIN eingegeben: ' + pin.length + ' von 4 Ziffern'">
+    @for (i of [0, 1, 2, 3]; track i) {
+      <div class="pin-dot" [class.filled]="pin.length > i" [class.error]="errorMessage"></div>
     }
-    <button mat-raised-button class="numpad-btn delete-btn" (click)="onDeleteClick()">
-      <mat-icon>backspace</mat-icon>
-    </button>
-    <button mat-raised-button class="numpad-btn" (click)="onNumpadClick(0)">
-      0
-    </button>
-    <button mat-raised-button class="numpad-btn enter-btn" color="primary" (click)="onSubmit()" [disabled]="pin.length !== 4">
-      <mat-icon>check</mat-icon>
-    </button>
   </div>
 
   @if (errorMessage) {
-    <div class="error-message">
-      <mat-icon>error</mat-icon>
+    <div class="error-message" role="alert">
       {{ errorMessage }}
     </div>
   }
+
+  <div class="numpad" role="group" aria-label="Zahlenblock">
+    @for (num of [1, 2, 3, 4, 5, 6, 7, 8, 9]; track num) {
+      <button
+        mat-button
+        class="numpad-btn"
+        (click)="onNumpadClick(num)"
+        [attr.aria-label]="num.toString()"
+        [disabled]="pin.length >= 4"
+      >
+        {{ num }}
+      </button>
+    }
+    <button
+      mat-button
+      class="numpad-btn action-btn"
+      (click)="onDeleteClick()"
+      aria-label="Letzte Ziffer löschen"
+      [disabled]="pin.length === 0"
+    >
+      <mat-icon>backspace</mat-icon>
+    </button>
+    <button
+      mat-button
+      class="numpad-btn"
+      (click)="onNumpadClick(0)"
+      aria-label="0"
+      [disabled]="pin.length >= 4"
+    >
+      0
+    </button>
+    <button
+      mat-button
+      class="numpad-btn action-btn confirm-btn"
+      (click)="onSubmit()"
+      aria-label="PIN bestätigen"
+      [disabled]="pin.length !== 4"
+    >
+      <mat-icon>check</mat-icon>
+    </button>
+  </div>
 </mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <button mat-button (click)="onCancel()">Abbrechen</button>
+<mat-dialog-actions>
+  <button mat-button class="cancel-btn" (click)="onCancel()">Abbrechen</button>
 </mat-dialog-actions>
