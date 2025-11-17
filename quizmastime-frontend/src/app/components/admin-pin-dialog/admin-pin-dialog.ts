@@ -18,7 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
 export class AdminPinDialog {
   pin = '';
   errorMessage = '';
-  private readonly correctPin = '1234'; // TODO: Move to environment config
+  private readonly correctPin = '82678';
 
   constructor(public dialogRef: MatDialogRef<AdminPinDialog>) {}
 
