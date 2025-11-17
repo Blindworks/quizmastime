@@ -1,0 +1,35 @@
+<h2 mat-dialog-title>Admin-Zugang</h2>
+
+<mat-dialog-content>
+  <p>Bitte geben Sie den 4-stelligen PIN ein:</p>
+
+  <mat-form-field appearance="outline" class="pin-field">
+    <mat-label>PIN</mat-label>
+    <input
+      matInput
+      type="password"
+      inputmode="numeric"
+      maxlength="4"
+      [value]="pin"
+      (input)="onPinInput($event)"
+      (keyup.enter)="onSubmit()"
+      autocomplete="off"
+      autofocus
+    >
+    <mat-icon matSuffix>lock</mat-icon>
+  </mat-form-field>
+
+  @if (errorMessage) {
+    <div class="error-message">
+      <mat-icon>error</mat-icon>
+      {{ errorMessage }}
+    </div>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Abbrechen</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="pin.length !== 4">
+    Bestätigen
+  </button>
+</mat-dialog-actions>
