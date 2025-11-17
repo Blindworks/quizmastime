@@ -106,7 +106,10 @@ export class UserQuestionList implements OnInit {
 
     for (let day = 1; day <= 24; day++) {
       const userQuestion = userQuestions.find(uq => uq.day === day);
-      const question = userQuestion ? this.questions.find(q => q.id === userQuestion.questionId) : undefined;
+      // Use the question directly from the backend response if available,
+      // otherwise fall back to searching in the local questions array
+      const question = userQuestion?.question ||
+        (userQuestion ? this.questions.find(q => q.id === userQuestion.questionId) : undefined);
 
       const lockoutInfo = userQuestion ? this.calculateLockoutStatus(userQuestion) : { isLockedOut: false, remainingMinutes: 0 };
 
