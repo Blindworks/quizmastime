@@ -13,6 +13,14 @@ export interface UserQuestion {
   wrongAttempts: number;
   lastWrongAnswer?: string;
   correctAnswerDate?: string;
+  question?: {
+    id: number;
+    questionText: string;
+    answer1: string;
+    answer2: string;
+    answer3: string;
+    correctAnswer: number;
+  };
 }
 
 @Injectable({
@@ -33,6 +41,10 @@ export class UserQuestionService {
 
   getUserQuestionsByUserId(userId: number): Observable<UserQuestion[]> {
     return this.http.get<UserQuestion[]>(`${this.apiUrl}/user/${userId}`);
+  }
+
+  getUserQuestionsByUserIdAndDay(userId: number, day: number): Observable<UserQuestion[]> {
+    return this.http.get<UserQuestion[]>(`${this.apiUrl}/user/${userId}/day/${day}`);
   }
 
   assignQuestionToUser(userQuestion: UserQuestion): Observable<UserQuestion> {
