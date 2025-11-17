@@ -1,7 +1,7 @@
 <router-outlet />
 
 @if (!isAdminRoute()) {
-  <button mat-mini-fab class="admin-fab" routerLink="/admin" aria-label="Admin">
+  <button mat-mini-fab class="admin-fab" (click)="openAdminPinDialog()" aria-label="Admin">
     <mat-icon>settings</mat-icon>
   </button>
 } @else {

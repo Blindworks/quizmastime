@@ -1,0 +1,41 @@
+:host {
+  display: block;
+}
+
+mat-dialog-content {
+  min-width: 300px;
+
+  p {
+    margin-bottom: 16px;
+    color: rgba(0, 0, 0, 0.7);
+  }
+}
+
+.pin-field {
+  width: 100%;
+
+  input {
+    text-align: center;
+    font-size: 24px;
+    letter-spacing: 8px;
+  }
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #f44336;
+  margin-top: 8px;
+  font-size: 14px;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+mat-dialog-actions {
+  padding: 16px 0 0 0;
+}
