@@ -65,6 +65,18 @@ public class PrizeController {
         return ResponseEntity.ok(prizes);
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<PrizeDTO> getPrizeByUserId(@PathVariable Long userId) {
+        log.info("GET /api/prizes/user/{} - Fetching prize for user", userId);
+        try {
+            PrizeDTO prize = prizeService.getPrizeByUserId(userId);
+            return ResponseEntity.ok(prize);
+        } catch (IllegalArgumentException e) {
+            log.error("Error fetching prize for user: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<PrizeDTO> updatePrize(@PathVariable Long id, @Valid @RequestBody PrizeDTO prizeDTO) {
         log.info("PUT /api/prizes/{} - Updating prize", id);

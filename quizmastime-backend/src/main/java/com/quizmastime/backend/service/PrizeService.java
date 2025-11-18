@@ -77,6 +77,18 @@ public class PrizeService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public PrizeDTO getPrizeByUserId(Long userId) {
+        log.info("Fetching prize for user with id: {}", userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
+
+        Prize prize = prizeRepository.findByAssignedUser(user)
+                .orElseThrow(() -> new IllegalArgumentException("No prize found for user with id: " + userId));
+
+        return mapToDTO(prize);
+    }
+
     @Transactional
     public PrizeDTO updatePrize(Long id, PrizeDTO prizeDTO) {
         log.info("Updating prize with id: {}", id);
