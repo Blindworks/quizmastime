@@ -79,6 +79,11 @@ export class AdventCalendar implements OnInit {
         this.userQuestions = result.userQuestions;
         this.calendarSettings = result.calendarSettings;
         this.initializeCalendar();
+
+        // Check if all questions are answered correctly and show prize popup automatically
+        if (this.checkAllQuestionsAnsweredCorrectly()) {
+          this.showCongratulationsDialog();
+        }
       },
       error: (error) => {
         console.error('Fehler beim Laden der Daten:', error);
