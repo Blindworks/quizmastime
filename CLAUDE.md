@@ -119,6 +119,22 @@ CORS is configured in `application.properties` with `cors.allowed.origins`. Defa
 
 ## Deployment
 
-- **Frontend:** Netlify deployment from GitHub
-- **Backend:** Railway deployment from GitHub
-- Ensure environment-specific configuration for database credentials and CORS settings
+### Frontend (Netlify)
+- Deployed automatically from GitHub
+- Build command: `npm run build`
+- Publish directory: `dist/quizmastime-frontend`
+- Environment variables: Set `API_URL` to point to Railway backend URL
+
+### Backend (Railway)
+- Deployed automatically from GitHub
+- **Root Directory:** Set to `quizmastime-backend` in Railway settings
+- **Build:** Automatic via Maven (`./mvnw clean package -DskipTests`)
+- **Runtime:** Java 21 (configured in `nixpacks.toml`)
+- **Database:** MySQL provisioned in Railway
+
+**Required Environment Variables on Railway:**
+- `CORS_ALLOWED_ORIGINS` - Your Netlify frontend URL (e.g., `https://your-app.netlify.app`)
+- `MYSQL_URL`, `MYSQL_USER`, `MYSQL_PASSWORD` - Auto-provided by Railway MySQL service
+- Optional: `JPA_SHOW_SQL=false`, `JPA_DDL_AUTO=update`, `QUIZ_LOCKOUT_DURATION=30`
+
+**Important:** See `quizmastime-backend/RAILWAY_DEPLOYMENT.md` for detailed deployment instructions.
