@@ -135,6 +135,12 @@ export class QuestionView implements OnInit {
         if (response.correct && response.userQuestion?.correctAnswerDate) {
           this.isAnswered = true;
           this.isCorrect = true;
+
+          // If this is question 24 and it's already answered correctly,
+          // check if all questions are answered to show the prize popup
+          if (this.day === 24) {
+            this.checkAndShowPrizePopup();
+          }
           return;
         }
 
@@ -275,22 +281,37 @@ export class QuestionView implements OnInit {
 
   checkAndShowPrizePopup(): void {
     if (!this.currentUser || !this.currentUser.id) {
+      console.log('Kein User gefunden für Prize-Popup-Check');
       return;
     }
+
+    console.log('Prüfe, ob alle Fragen beantwortet wurden für Prize-Popup...');
 
     // Load all user questions to check if all are answered correctly
     this.userQuestionService.getUserQuestionsByUserId(this.currentUser.id).subscribe({
       next: (userQuestions) => {
+        console.log(`Gefundene UserQuestions: ${userQuestions.length}`);
+
+        // Filter questions for days 1-24
+        const relevantQuestions = userQuestions.filter(uq => uq.day >= 1 && uq.day <= 24);
+        console.log(`Relevante Fragen (Tag 1-24): ${relevantQuestions.length}`);
+
         // Check if all 24 questions have been answered correctly
-        if (userQuestions.length >= 24) {
-          const allCorrect = userQuestions
-            .filter(uq => uq.day <= 24)
-            .every(uq => uq.correctAnswerDate != null);
+        if (relevantQuestions.length === 24) {
+          const correctAnswers = relevantQuestions.filter(uq => uq.correctAnswerDate != null);
+          console.log(`Korrekt beantwortete Fragen: ${correctAnswers.length} von 24`);
+
+          const allCorrect = relevantQuestions.every(uq => uq.correctAnswerDate != null);
 
           if (allCorrect) {
+            console.log('Alle 24 Fragen korrekt beantwortet! Zeige Glückwunsch-Popup.');
             // Show congratulations popup automatically
             this.showCongratulationsDialog();
+          } else {
+            console.log('Noch nicht alle Fragen korrekt beantwortet.');
           }
+        } else {
+          console.log(`Noch nicht alle 24 Fragen zugewiesen (aktuell: ${relevantQuestions.length})`);
         }
       },
       error: (error) => {
