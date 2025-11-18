@@ -83,9 +83,19 @@ public class UserQuestionService {
     @Transactional(readOnly = true)
     public List<UserQuestionDTO> getUserQuestionsByUserIdAndDay(Long userId, Integer day) {
         log.info("Fetching questions for user {} on day {}", userId, day);
-        return userQuestionRepository.findByUserIdAndDay(userId, day).stream()
-                .map(this::mapToDTO)
+        List<UserQuestion> userQuestions = userQuestionRepository.findByUserIdAndDay(userId, day);
+        log.info("Found {} UserQuestion entries for user {} on day {}", userQuestions.size(), userId, day);
+
+        List<UserQuestionDTO> dtos = userQuestions.stream()
+                .map(uq -> {
+                    log.info("Mapping UserQuestion: id={}, questionId={}, day={}", uq.getId(), uq.getQuestion().getId(), uq.getDay());
+                    UserQuestionDTO dto = mapToDTO(uq);
+                    log.info("Mapped DTO: question field is {}", dto.getQuestion() != null ? "present (id=" + dto.getQuestion().getId() + ")" : "NULL");
+                    return dto;
+                })
                 .collect(Collectors.toList());
+
+        return dtos;
     }
 
     @Transactional(readOnly = true)
