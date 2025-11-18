@@ -3,7 +3,8 @@
 [build]
   # Build command
   # Note: legacy-peer-deps is configured in .npmrc file
-  command = "npm run build"
+  # Explicitly use production configuration to ensure environment.prod.ts is used
+  command = "npm run build -- --configuration=production"
 
   # Directory with the built files
   publish = "dist/quizmastime-frontend/browser"
