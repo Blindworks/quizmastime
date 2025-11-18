@@ -172,10 +172,7 @@ export class UserQuestionForm implements OnInit, OnChanges {
         this.userQuestionService.assignQuestionToUser(userQuestion).subscribe({
           next: (response) => {
             console.log('User-question assignment created successfully:', response);
-            // Only reset the question field to allow assigning multiple questions to the same user
-            this.userQuestionForm.patchValue({
-              questionId: ''
-            });
+            this.userQuestionForm.reset();
             this.userQuestionCreated.emit();
           },
           error: (error) => {
