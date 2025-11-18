@@ -28,6 +28,10 @@ export class PrizeService {
     return this.http.get<Prize>(`${this.apiUrl}/${id}`);
   }
 
+  getPrizeByUserId(userId: number): Observable<Prize> {
+    return this.http.get<Prize>(`${this.apiUrl}/user/${userId}`);
+  }
+
   createPrize(prize: Prize): Observable<Prize> {
     return this.http.post<Prize>(this.apiUrl, prize);
   }

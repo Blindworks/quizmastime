@@ -42,7 +42,28 @@
       <div class="confetti"></div>
     </div>
 
-    <article class="prize-card" role="article" aria-labelledby="congratulations-heading">
+    <!-- Loading state -->
+    <div *ngIf="isLoading" class="loading-container" role="status" aria-live="polite">
+      <mat-spinner diameter="60"></mat-spinner>
+      <p>Lade deinen Gewinn...</p>
+    </div>
+
+    <!-- Error state -->
+    <div *ngIf="!isLoading && loadError" class="error-container" role="alert">
+      <mat-icon class="error-icon">error_outline</mat-icon>
+      <p class="error-message">Gewinn konnte nicht geladen werden.</p>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="logout()"
+        class="back-button"
+        type="button">
+        Zurück zur Startseite
+      </button>
+    </div>
+
+    <!-- Prize content -->
+    <article *ngIf="!isLoading && !loadError" class="prize-card" role="article" aria-labelledby="congratulations-heading">
       <h1 class="congratulations-title" id="congratulations-heading">Herzlichen Glückwunsch!</h1>
 
       <section class="success-message" role="status" aria-live="polite">
