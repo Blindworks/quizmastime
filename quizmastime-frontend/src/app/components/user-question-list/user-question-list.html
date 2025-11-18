@@ -10,7 +10,7 @@
       <div class="user-selection">
         <mat-form-field appearance="fill" class="user-select">
           <mat-label>User auswählen</mat-label>
-          <mat-select [(ngModel)]="selectedUser" (selectionChange)="onUserSelected()">
+          <mat-select [(ngModel)]="selectedUser" (selectionChange)="onUserSelected()" [compareWith]="compareUsers">
             <mat-option *ngFor="let user of users" [value]="user">
               {{ user.firstName }} {{ user.lastName }}
             </mat-option>
