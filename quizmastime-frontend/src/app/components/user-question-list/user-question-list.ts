@@ -47,6 +47,7 @@ export class UserQuestionList implements OnInit {
   daysInfo: DayInfo[] = [];
   selectedDay: DayInfo | null = null;
   lockoutDurationMinutes: number = 30;
+  isLoading: boolean = false;
 
   @Output() assignUserQuestion = new EventEmitter<{user: User, day: number, userQuestion?: UserQuestion, assignedQuestionIds: number[]}>();
 
@@ -83,17 +84,20 @@ export class UserQuestionList implements OnInit {
     }
 
     console.log('User selected:', this.selectedUser);
+    this.isLoading = true;
 
     this.userQuestionService.getUserQuestionsByUserId(this.selectedUser.id).subscribe({
       next: (userQuestions) => {
         console.log('User questions loaded:', userQuestions);
         this.buildDaysInfo(userQuestions);
         this.selectedDay = null;
+        this.isLoading = false;
       },
       error: (error) => {
         console.error('Error loading user questions:', error);
         // Even if there's an error, build the grid with empty data
         this.buildDaysInfo([]);
+        this.isLoading = false;
       }
     });
   }
@@ -128,6 +132,12 @@ export class UserQuestionList implements OnInit {
   }
 
   onDayClick(dayInfo: DayInfo): void {
+    // Prevent clicking while loading
+    if (this.isLoading) {
+      console.log('Still loading, please wait...');
+      return;
+    }
+
     this.selectedDay = dayInfo;
 
     // Emit event to populate the form above
@@ -136,6 +146,8 @@ export class UserQuestionList implements OnInit {
       const assignedQuestionIds = this.daysInfo
         .filter(di => di.userQuestion && di.userQuestion.questionId)
         .map(di => di.userQuestion!.questionId);
+
+      console.log('Assigned question IDs:', assignedQuestionIds);
 
       this.assignUserQuestion.emit({
         user: this.selectedUser,

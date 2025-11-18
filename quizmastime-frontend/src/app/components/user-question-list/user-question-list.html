@@ -18,8 +18,14 @@
         </mat-form-field>
       </div>
 
+      <!-- Loading Indicator -->
+      <div class="no-selection" *ngIf="selectedUser && isLoading">
+        <mat-icon>hourglass_empty</mat-icon>
+        <p>Lade Daten...</p>
+      </div>
+
       <!-- Calendar Grid -->
-      <div class="days-grid" *ngIf="selectedUser && daysInfo.length > 0">
+      <div class="days-grid" *ngIf="selectedUser && daysInfo.length > 0 && !isLoading">
         <div
           *ngFor="let dayInfo of daysInfo"
           [ngClass]="getDayStatusClass(dayInfo)"
@@ -33,9 +39,9 @@
       </div>
 
       <!-- No Days Info Message -->
-      <div class="no-selection" *ngIf="selectedUser && daysInfo.length === 0">
-        <mat-icon>hourglass_empty</mat-icon>
-        <p>Lade Daten...</p>
+      <div class="no-selection" *ngIf="selectedUser && daysInfo.length === 0 && !isLoading">
+        <mat-icon>info</mat-icon>
+        <p>Keine Daten verfügbar</p>
       </div>
 
       <!-- No User Selected Message -->
