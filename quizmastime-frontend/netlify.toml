@@ -1,8 +1,9 @@
 # Netlify configuration for QuizmasTime Frontend
 
 [build]
-  # Build command - use legacy-peer-deps due to Angular version dependencies
-  command = "npm install --legacy-peer-deps && npm run build"
+  # Build command
+  # Note: legacy-peer-deps is configured in .npmrc file
+  command = "npm run build"
 
   # Directory with the built files
   publish = "dist/quizmastime-frontend/browser"
