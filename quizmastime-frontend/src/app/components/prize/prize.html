@@ -2,33 +2,39 @@
   <!-- Header with player info -->
   <header class="prize-header" *ngIf="currentUser">
     <div class="player-info">
-      <div class="player-avatar">
+      <div class="player-avatar" role="img" [attr.aria-label]="'Avatar von ' + currentUser.firstName">
         <img
           [src]="getAvatarUrl(currentUser)"
-          [alt]="currentUser.firstName"
+          [alt]="'Avatar von ' + currentUser.firstName"
           class="avatar-image"
           (error)="onImageError()"
           [style.display]="hasImageError ? 'none' : 'block'">
-        <span class="avatar-fallback" [style.display]="hasImageError ? 'flex' : 'none'">{{ currentUser.firstName.charAt(0).toUpperCase() }}</span>
+        <span class="avatar-fallback" [style.display]="hasImageError ? 'flex' : 'none'" aria-hidden="true">{{ currentUser.firstName.charAt(0).toUpperCase() }}</span>
       </div>
       <div class="player-details">
-        <h2>{{ currentUser.firstName }}</h2>
+        <h2 id="player-name">{{ currentUser.firstName }}</h2>
       </div>
     </div>
-    <div class="logout-avatar" (click)="logout()" matTooltip="Zurück">
+    <button
+      class="logout-avatar"
+      (click)="logout()"
+      matTooltip="Zurück zur Startseite"
+      type="button"
+      aria-label="Zurück zur Startseite"
+      tabindex="0">
       <img
         [src]="'/assets/icons/back.png'"
-        [alt]="'logout'"
+        alt=""
         class="avatar-image"
         (error)="onLogoutImageError()"
         [style.display]="hasLogoutImageError ? 'none' : 'block'">
-      <span class="avatar-fallback" [style.display]="hasLogoutImageError ? 'flex' : 'none'">←</span>
-    </div>
+      <span class="avatar-fallback" [style.display]="hasLogoutImageError ? 'flex' : 'none'" aria-hidden="true">←</span>
+    </button>
   </header>
 
   <!-- Main prize content -->
-  <div class="prize-content">
-    <div class="celebration-animation">
+  <main class="prize-content" role="main">
+    <div class="celebration-animation" aria-hidden="true">
       <div class="confetti"></div>
       <div class="confetti"></div>
       <div class="confetti"></div>
@@ -36,38 +42,44 @@
       <div class="confetti"></div>
     </div>
 
-    <div class="prize-card">
-      <h1 class="congratulations-title">Herzlichen Glückwunsch!</h1>
+    <article class="prize-card" role="article" aria-labelledby="congratulations-heading">
+      <h1 class="congratulations-title" id="congratulations-heading">Herzlichen Glückwunsch!</h1>
 
-      <div class="success-message">
-        <mat-icon class="trophy-icon">emoji_events</mat-icon>
+      <section class="success-message" role="status" aria-live="polite">
+        <mat-icon class="trophy-icon" aria-hidden="true">emoji_events</mat-icon>
         <p class="message-text">
           Du hast alle {{ totalQuestions }} Fragen richtig beantwortet!
         </p>
-      </div>
+      </section>
 
-      <div class="prize-reveal">
-        <h2 class="prize-title">Dein Gewinn:</h2>
+      <section class="prize-reveal" aria-labelledby="prize-heading">
+        <h2 class="prize-title" id="prize-heading">Dein Gewinn:</h2>
         <div class="prize-box">
-          <div class="prize-icon">
+          <div class="prize-icon" aria-hidden="true">
             <mat-icon>card_giftcard</mat-icon>
           </div>
           <div class="prize-description">
-            <h3>{{ prizeTitle }}</h3>
-            <p>{{ prizeDescription }}</p>
+            <h3 id="prize-title">{{ prizeTitle }}</h3>
+            <p id="prize-description">{{ prizeDescription }}</p>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div class="christmas-message">
-        <mat-icon class="star-icon">star</mat-icon>
+      <aside class="christmas-message" role="complementary">
+        <mat-icon class="star-icon" aria-hidden="true">star</mat-icon>
         <p>Frohe Weihnachten und viel Freude mit deinem Gewinn!</p>
-        <mat-icon class="star-icon">star</mat-icon>
-      </div>
+        <mat-icon class="star-icon" aria-hidden="true">star</mat-icon>
+      </aside>
 
-      <button mat-raised-button color="primary" (click)="logout()" class="back-button">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="logout()"
+        class="back-button"
+        type="button"
+        aria-label="Zurück zur Startseite navigieren">
         Zurück zur Startseite
       </button>
-    </div>
-  </div>
+    </article>
+  </main>
 </div>

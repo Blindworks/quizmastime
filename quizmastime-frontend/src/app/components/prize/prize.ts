@@ -17,35 +17,27 @@ import { User } from '../../models/user';
   templateUrl: './prize.html',
   styleUrl: './prize.scss'
 })
-export class Prize implements OnInit {
+export class PrizeComponent implements OnInit {
   currentUser: User | null = null;
-  hasImageError: boolean = false;
-  hasLogoutImageError: boolean = false;
-  totalQuestions: number = 24;
-  prizeTitle: string = 'Dein persönlicher Weihnachtsgewinn!';
-  prizeDescription: string = 'Du hast bewiesen, dass du ein echter Weihnachts-Experte bist. Genieße deinen wohlverdienten Preis!';
+  hasImageError = false;
+  hasLogoutImageError = false;
+  readonly totalQuestions = 24;
+  readonly prizeTitle = 'Dein persönlicher Weihnachtsgewinn!';
+  readonly prizeDescription = 'Du hast bewiesen, dass du ein echter Weihnachts-Experte bist. Genieße deinen wohlverdienten Preis!';
 
-  constructor(private router: Router) {}
+  constructor(private readonly router: Router) {}
 
   ngOnInit(): void {
-    // Load current user from localStorage
-    const storedUser = localStorage.getItem('currentUser');
-    if (storedUser) {
-      this.currentUser = JSON.parse(storedUser);
-    }
+    this.loadCurrentUser();
 
     if (!this.currentUser) {
-      this.router.navigate(['/']);
-      return;
+      this.navigateToHome();
     }
-
-    // You can customize the prize based on the user or other criteria
-    // For now, we use default values
   }
 
   logout(): void {
     localStorage.removeItem('currentUser');
-    this.router.navigate(['/']);
+    this.navigateToHome();
   }
 
   getAvatarUrl(user: User): string {
@@ -60,5 +52,21 @@ export class Prize implements OnInit {
 
   onLogoutImageError(): void {
     this.hasLogoutImageError = true;
+  }
+
+  private loadCurrentUser(): void {
+    const storedUser = localStorage.getItem('currentUser');
+    if (storedUser) {
+      try {
+        this.currentUser = JSON.parse(storedUser);
+      } catch (error) {
+        console.error('Failed to parse stored user:', error);
+        this.currentUser = null;
+      }
+    }
+  }
+
+  private navigateToHome(): void {
+    this.router.navigate(['/']);
   }
 }
