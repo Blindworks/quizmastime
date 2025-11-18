@@ -38,7 +38,6 @@ public class QuestionService {
 
     @Transactional(readOnly = true)
     public QuestionDTO getQuestionById(Long id) {
-        log.info("Fetching question with id: {}", id);
         Question question = questionRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Question not found with id: " + id));
         return mapToDTO(question);

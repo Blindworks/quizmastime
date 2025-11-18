@@ -45,7 +45,6 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserDTO getUserById(Long id) {
-        log.info("Fetching user with id: {}", id);
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
         return mapToDTO(user);
