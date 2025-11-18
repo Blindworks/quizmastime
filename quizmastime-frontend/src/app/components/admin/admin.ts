@@ -116,9 +116,19 @@ export class Admin {
       }
     });
 
+    // Subscribe to questionAssigned event to reload list while dialog is open
+    const subscription = dialogRef.componentInstance.questionAssigned.subscribe(() => {
+      if (this.userQuestionList) {
+        this.userQuestionList.loadUserQuestions();
+      }
+    });
+
     dialogRef.afterClosed().subscribe(result => {
+      // Unsubscribe from the event when dialog closes
+      subscription.unsubscribe();
+
       if (result?.success) {
-        // Reload the user questions list after create/update
+        // Reload the user questions list after update (edit mode)
         if (this.userQuestionList) {
           this.userQuestionList.loadUserQuestions();
         }

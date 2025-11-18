@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
@@ -41,6 +41,7 @@ export class UserQuestionDialog implements OnInit {
   userQuestionForm: FormGroup;
   questions: Question[] = [];
   isEditMode: boolean = false;
+  questionAssigned = new EventEmitter<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -137,7 +138,20 @@ export class UserQuestionDialog implements OnInit {
         this.userQuestionService.assignQuestionToUser(userQuestion).subscribe({
           next: (response) => {
             console.log('User-question assignment created successfully:', response);
-            this.dialogRef.close({ success: true, action: 'create' });
+            // Don't close dialog - allow assigning multiple questions
+            // Reset question field and reload available questions
+            this.userQuestionForm.patchValue({
+              questionId: ''
+            });
+            // Add the newly assigned question to the list of assigned IDs
+            if (!this.data.assignedQuestionIds) {
+              this.data.assignedQuestionIds = [];
+            }
+            this.data.assignedQuestionIds.push(formValue.questionId);
+            // Reload questions to exclude the newly assigned one
+            this.loadQuestions();
+            // Emit event to notify parent component
+            this.questionAssigned.emit();
           },
           error: (error) => {
             console.error('Error creating user-question assignment:', error);
