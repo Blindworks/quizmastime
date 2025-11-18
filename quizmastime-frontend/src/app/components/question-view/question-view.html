@@ -15,15 +15,6 @@
         <h2>{{ currentUser.firstName }}</h2>
       </div>
     </div>
-    <div class="back-avatar" (click)="backToCalendar()" matTooltip="Zurück">
-      <img
-        [src]="'/assets/icons/back.png'"
-        alt="Zurück"
-        class="avatar-image"
-        (error)="onBackImageError()"
-        [style.display]="hasBackImageError ? 'none' : 'block'">
-      <span class="avatar-fallback" [style.display]="hasBackImageError ? 'flex' : 'none'">←</span>
-    </div>
   </header>
 
   <!-- Loading State -->
@@ -61,6 +52,17 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Back Button (only shown when not answered and not locked out) -->
+    <div class="back-button-container" *ngIf="!isAnswered && !isLockedOut">
+      <button
+        mat-raised-button
+        color="accent"
+        class="back-to-calendar-button"
+        (click)="backToCalendar()">
+        Zurück zum Kalender
+      </button>
     </div>
 
     <!-- Lockout Message -->
