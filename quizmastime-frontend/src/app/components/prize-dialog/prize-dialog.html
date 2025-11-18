@@ -1,0 +1,33 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Preis bearbeiten' : 'Neuen Preis erstellen' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="prizeForm">
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" required>
+      <mat-error *ngIf="prizeForm.get('name')?.hasError('required')">
+        Name ist erforderlich
+      </mat-error>
+      <mat-error *ngIf="prizeForm.get('name')?.hasError('minlength')">
+        Name muss mindestens 2 Zeichen lang sein
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Beschreibung</mat-label>
+      <textarea matInput formControlName="description" rows="4"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Bild-URL</mat-label>
+      <input matInput formControlName="imageUrl">
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Abbrechen</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!prizeForm.valid">
+    {{ isEditMode ? 'Aktualisieren' : 'Erstellen' }}
+  </button>
+</mat-dialog-actions>
