@@ -1,0 +1,49 @@
+# Netlify configuration for QuizmasTime Frontend
+
+[build]
+  # Build command
+  command = "npm run build"
+
+  # Directory with the built files
+  publish = "dist/quizmastime-frontend/browser"
+
+  # Base directory (optional, defaults to root)
+  base = "quizmastime-frontend"
+
+[build.environment]
+  # Node version for build
+  NODE_VERSION = "22"
+
+  # Angular CLI will use production configuration by default
+  # The API URL should be configured via Netlify environment variables
+  # Set NETLIFY_API_URL in Netlify dashboard
+
+[[redirects]]
+  # Redirect all routes to index.html for Angular routing (SPA)
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Optional: Configure headers for better security and caching
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
+    X-XSS-Protection = "1; mode=block"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
