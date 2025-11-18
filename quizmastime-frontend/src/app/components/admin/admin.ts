@@ -6,6 +6,7 @@ import { UserList } from '../user-list/user-list';
 import { QuestionList } from '../question-list/question-list';
 import { UserQuestionList } from '../user-question-list/user-question-list';
 import { CalendarManagement } from '../calendar-management/calendar-management';
+import { PrizeManagementComponent } from '../prize-management/prize-management';
 import { UserQuestionDialog } from '../user-question-dialog/user-question-dialog';
 import { QuestionDialog } from '../question-dialog/question-dialog';
 import { UserDialog } from '../user-dialog/user-dialog';
@@ -20,7 +21,8 @@ import { User } from '../../models/user';
     UserList,
     QuestionList,
     UserQuestionList,
-    CalendarManagement
+    CalendarManagement,
+    PrizeManagementComponent
   ],
   templateUrl: './admin.html',
   styleUrl: './admin.scss'
