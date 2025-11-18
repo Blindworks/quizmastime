@@ -74,54 +74,70 @@ export class QuestionView implements OnInit {
     // Load UserQuestion assignment for this day first
     this.userQuestionService.getUserQuestionsByUserIdAndDay(this.currentUser!.id!, this.day).subscribe({
       next: (userQuestions) => {
-        if (userQuestions && userQuestions.length > 0 && userQuestions[0].question) {
-          // Use the question from the UserQuestion assignment
+        console.log('UserQuestions vom Backend erhalten:', userQuestions);
+        console.log('Länge:', userQuestions?.length);
+        console.log('Erste UserQuestion:', userQuestions?.[0]);
+        console.log('Question-Feld der ersten UserQuestion:', userQuestions?.[0]?.question);
+
+        if (userQuestions && userQuestions.length > 0) {
           const userQuestion = userQuestions[0];
-          this.question = {
-            id: userQuestion.question!.id,
-            questionText: userQuestion.question!.questionText,
-            answer1: userQuestion.question!.answer1,
-            answer2: userQuestion.question!.answer2,
-            answer3: userQuestion.question!.answer3,
-            correctAnswer: userQuestion.question!.correctAnswer
-          };
-          this.prepareAnswers();
-          // Check lockout status after question is loaded
-          this.checkLockoutStatus();
-          this.loading = false;
+
+          // Check if question field is populated
+          if (userQuestion.question && userQuestion.question.id) {
+            // Use the question from the UserQuestion assignment
+            console.log('Verwende Frage aus UserQuestion-Zuweisung:', userQuestion.question);
+            this.question = {
+              id: userQuestion.question.id,
+              questionText: userQuestion.question.questionText,
+              answer1: userQuestion.question.answer1,
+              answer2: userQuestion.question.answer2,
+              answer3: userQuestion.question.answer3,
+              correctAnswer: userQuestion.question.correctAnswer
+            };
+            this.prepareAnswers();
+            this.checkLockoutStatus();
+            this.loading = false;
+          } else if (userQuestion.questionId) {
+            // Fallback: question field not populated, load by questionId
+            console.warn('Question-Feld nicht im UserQuestion-Objekt, lade Frage direkt per ID:', userQuestion.questionId);
+            this.questionService.getQuestionById(userQuestion.questionId).subscribe({
+              next: (question) => {
+                console.log('Frage per ID geladen:', question);
+                this.question = question;
+                this.prepareAnswers();
+                this.checkLockoutStatus();
+                this.loading = false;
+              },
+              error: (error) => {
+                console.error('Fehler beim Laden der Frage per ID:', error);
+                this.loading = false;
+              }
+            });
+          } else {
+            console.error('Weder question noch questionId vorhanden in UserQuestion:', userQuestion);
+            this.loading = false;
+          }
         } else {
-          // Fallback: No UserQuestion assigned for this day, load all questions
+          // No UserQuestion assigned for this day
           console.warn('Keine UserQuestion-Zuweisung für Tag gefunden:', this.day);
-          this.loadQuestionFallback();
+          console.warn('WICHTIG: Jeder Spieler sollte eine eigene Fragen-Zuweisung haben!');
+          this.loading = false;
         }
       },
       error: (error) => {
         console.error('Fehler beim Laden der UserQuestion:', error);
-        // Fallback to old behavior
-        this.loadQuestionFallback();
+        this.loading = false;
       }
     });
   }
 
+  // DEPRECATED: This method is no longer used and should not be called
+  // The old fallback logic loaded questions by array index, which doesn't respect
+  // per-player question assignments. Use UserQuestion assignments instead.
   loadQuestionFallback(): void {
-    // Fallback: Load all questions and use array index (old behavior)
-    this.questionService.getAllQuestions().subscribe({
-      next: (questions) => {
-        if (questions && questions.length >= this.day) {
-          this.question = questions[this.day - 1];
-          this.prepareAnswers();
-          // Check lockout status after question is loaded
-          this.checkLockoutStatus();
-        } else {
-          console.error('Keine Frage für Tag gefunden:', this.day);
-        }
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Fehler beim Laden der Frage:', error);
-        this.loading = false;
-      }
-    });
+    console.error('DEPRECATED: loadQuestionFallback sollte nicht mehr aufgerufen werden!');
+    console.error('Jeder Spieler sollte eigene UserQuestion-Zuweisungen haben.');
+    this.loading = false;
   }
 
   checkLockoutStatus(): void {
