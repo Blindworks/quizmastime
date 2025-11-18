@@ -5,11 +5,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { QuestionService } from '../../services/question';
 import { UserQuestionService, UserQuestion } from '../../services/user-question.service';
 import { Question } from '../../models/question';
 import { User } from '../../models/user';
 import { AnswerSubmission } from '../../models/answer-submission';
+import { CongratulationsDialog } from '../congratulations-dialog/congratulations-dialog';
 
 @Component({
   selector: 'app-question-view',
@@ -18,7 +20,8 @@ import { AnswerSubmission } from '../../models/answer-submission';
     MatButtonModule,
     MatCardModule,
     MatIconModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatDialogModule
   ],
   templateUrl: './question-view.html',
   styleUrl: './question-view.scss'
@@ -42,7 +45,8 @@ export class QuestionView implements OnInit {
     private questionService: QuestionService,
     private userQuestionService: UserQuestionService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -210,6 +214,12 @@ export class QuestionView implements OnInit {
           // Set lockout state for next attempt
           this.isLockedOut = false; // Keep false to show wrong answer message first
         }
+
+        // Check if this is question 24 and was answered correctly
+        if (this.day === 24 && response.correct) {
+          // Check if all questions have been answered correctly
+          this.checkAndShowPrizePopup();
+        }
       },
       error: (error) => {
         console.error('Fehler beim Senden der Antwort:', error);
@@ -261,5 +271,45 @@ export class QuestionView implements OnInit {
 
   onBackImageError(): void {
     this.hasBackImageError = true;
+  }
+
+  checkAndShowPrizePopup(): void {
+    if (!this.currentUser || !this.currentUser.id) {
+      return;
+    }
+
+    // Load all user questions to check if all are answered correctly
+    this.userQuestionService.getUserQuestionsByUserId(this.currentUser.id).subscribe({
+      next: (userQuestions) => {
+        // Check if all 24 questions have been answered correctly
+        if (userQuestions.length >= 24) {
+          const allCorrect = userQuestions
+            .filter(uq => uq.day <= 24)
+            .every(uq => uq.correctAnswerDate != null);
+
+          if (allCorrect) {
+            // Show congratulations popup automatically
+            this.showCongratulationsDialog();
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Fehler beim Laden der UserQuestions:', error);
+      }
+    });
+  }
+
+  showCongratulationsDialog(): void {
+    const dialogRef = this.dialog.open(CongratulationsDialog, {
+      width: '600px',
+      disableClose: false,
+      panelClass: 'congratulations-dialog'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'view-prize') {
+        this.router.navigate(['/prize']);
+      }
+    });
   }
 }
