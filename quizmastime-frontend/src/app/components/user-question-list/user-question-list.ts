@@ -228,4 +228,9 @@ export class UserQuestionList implements OnInit {
     if (dayInfo.userQuestion) return 'Zugewiesen';
     return 'Nicht zugewiesen';
   }
+
+  // Compare function for mat-select to preserve selection after reload
+  compareUsers(user1: User, user2: User): boolean {
+    return user1 && user2 && user1.id === user2.id;
+  }
 }
