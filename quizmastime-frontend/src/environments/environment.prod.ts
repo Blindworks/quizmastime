@@ -10,5 +10,5 @@ export const environment = {
   // Example: 'https://quizmastime-backend-production.up.railway.app/api'
   //apiUrl: 'https://quizmastime-production.up.railway.app/api'
   //apiUrl: 'https://quizmastime.ey.r.appspot.com'
-  apiUrl: 'https://quizmastime-backend-286492583974.europe-west3.run.app/'
+  apiUrl: 'https://quizmastime-backend-286492583974.europe-west3.run.app'
 };
