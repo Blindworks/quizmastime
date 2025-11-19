@@ -22,7 +22,7 @@ QuizmasTime is a Christmas-themed advent calendar quiz application for children 
 - MySQL database (local development)
 - Maven build system
 - Configuration via .properties files
-- Hosted on Railway
+- Deployment options: Railway or Google App Engine Standard
 
 **Communication:** REST API between frontend and backend
 
@@ -125,7 +125,7 @@ CORS is configured in `application.properties` with `cors.allowed.origins`. Defa
 - Publish directory: `dist/quizmastime-frontend`
 - Environment variables: Set `API_URL` to point to Railway backend URL
 
-### Backend (Railway)
+### Backend - Railway Option
 - Deployed automatically from GitHub
 - **Root Directory:** Set to `quizmastime-backend` in Railway settings
 - **Build:** Automatic via Maven (`./mvnw clean package -DskipTests`)
@@ -138,3 +138,24 @@ CORS is configured in `application.properties` with `cors.allowed.origins`. Defa
 - Optional: `JPA_SHOW_SQL=false`, `JPA_DDL_AUTO=update`, `QUIZ_LOCKOUT_DURATION=30`
 
 **Important:** See `quizmastime-backend/RAILWAY_DEPLOYMENT.md` for detailed deployment instructions.
+
+### Backend - Google App Engine Standard Option
+- Deployed using `gcloud app deploy`
+- **Runtime:** Java 21 (configured in `app.yaml`)
+- **Database:** Cloud SQL MySQL instance
+- **Configuration:** Uses `application-appengine.properties` Spring profile
+- **Build:** Maven build with Cloud SQL Socket Factory
+
+**Required Configuration in app.yaml:**
+- `SPRING_PROFILES_ACTIVE=appengine`
+- `CORS_ALLOWED_ORIGINS` - Your Netlify frontend URL
+- `CLOUD_SQL_CONNECTION_NAME` - Format: `project-id:region:instance-name`
+- `DB_NAME`, `DB_USER`, `DB_PASSWORD` - Cloud SQL credentials
+
+**Deployment Command:**
+```bash
+cd quizmastime-backend
+gcloud app deploy
+```
+
+**Important:** See `quizmastime-backend/APPENGINE_DEPLOYMENT.md` for complete setup and deployment instructions.
