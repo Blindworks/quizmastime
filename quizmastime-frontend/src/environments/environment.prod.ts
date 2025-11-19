@@ -8,5 +8,6 @@ export const environment = {
   production: true,
   // TODO: Replace with your actual Railway backend URL
   // Example: 'https://quizmastime-backend-production.up.railway.app/api'
-  apiUrl: 'https://quizmastime-production.up.railway.app/api'
+  //apiUrl: 'https://quizmastime-production.up.railway.app/api'
+  apiUrl: 'https://quizmastime.ey.r.appspot.com'
 };
