@@ -6,7 +6,7 @@
       <mat-label>Frage</mat-label>
       <mat-select formControlName="questionId" required [disabled]="isEditMode">
         <mat-option *ngFor="let question of questions" [value]="question.id">
-          {{ question.questionText }}
+          {{ question.questionText }} (Alter: {{ question.ageSuitability }})
         </mat-option>
       </mat-select>
       <mat-error *ngIf="userQuestionForm.get('questionId')?.hasError('required')">
