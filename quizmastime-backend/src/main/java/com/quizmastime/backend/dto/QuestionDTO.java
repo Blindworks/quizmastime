@@ -33,4 +33,9 @@ public class QuestionDTO {
     @Min(value = 1, message = "Correct answer must be 1, 2, or 3")
     @Max(value = 3, message = "Correct answer must be 1, 2, or 3")
     private Integer correctAnswer;
+
+    @NotNull(message = "Age suitability is required")
+    @Min(value = 6, message = "Age suitability must be between 6 and 12")
+    @Max(value = 12, message = "Age suitability must be between 6 and 12")
+    private Integer ageSuitability;
 }

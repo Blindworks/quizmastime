@@ -41,7 +41,8 @@ export class QuestionForm implements OnChanges {
       answer1: ['', Validators.required],
       answer2: ['', Validators.required],
       answer3: ['', Validators.required],
-      correctAnswer: [1, Validators.required]
+      correctAnswer: [1, Validators.required],
+      ageSuitability: [6, [Validators.required, Validators.min(6), Validators.max(12)]]
     });
   }
 
@@ -54,7 +55,8 @@ export class QuestionForm implements OnChanges {
         answer1: this.questionToEdit.answer1,
         answer2: this.questionToEdit.answer2,
         answer3: this.questionToEdit.answer3,
-        correctAnswer: this.questionToEdit.correctAnswer
+        correctAnswer: this.questionToEdit.correctAnswer,
+        ageSuitability: this.questionToEdit.ageSuitability
       });
     }
   }
@@ -63,7 +65,7 @@ export class QuestionForm implements OnChanges {
     this.isEditMode = false;
     this.editingQuestionId = undefined;
     this.questionToEdit = null;
-    this.questionForm.reset({ correctAnswer: 1 });
+    this.questionForm.reset({ correctAnswer: 1, ageSuitability: 6 });
   }
 
   onSubmit(): void {
@@ -90,7 +92,7 @@ export class QuestionForm implements OnChanges {
         this.questionService.createQuestion(question).subscribe({
           next: (response) => {
             console.log('Question created successfully:', response);
-            this.questionForm.reset({ correctAnswer: 1 });
+            this.questionForm.reset({ correctAnswer: 1, ageSuitability: 6 });
             this.questionCreated.emit();
           },
           error: (error) => {

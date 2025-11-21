@@ -21,7 +21,7 @@ import { Question } from '../../models/question';
 })
 export class QuestionList implements OnInit {
   questions: Question[] = [];
-  displayedColumns: string[] = ['questionText', 'answer1', 'answer2', 'answer3', 'correctAnswer', 'actions'];
+  displayedColumns: string[] = ['questionText', 'answer1', 'answer2', 'answer3', 'correctAnswer', 'ageSuitability', 'actions'];
   @Output() editQuestion = new EventEmitter<Question>();
   @Output() createQuestion = new EventEmitter<void>();
 

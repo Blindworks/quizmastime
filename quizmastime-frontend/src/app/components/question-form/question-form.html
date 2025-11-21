@@ -48,6 +48,20 @@
         </mat-radio-group>
       </div>
 
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Age Suitability (6-12)</mat-label>
+        <input matInput type="number" formControlName="ageSuitability" min="6" max="12" required>
+        <mat-error *ngIf="questionForm.get('ageSuitability')?.hasError('required')">
+          Age suitability is required
+        </mat-error>
+        <mat-error *ngIf="questionForm.get('ageSuitability')?.hasError('min')">
+          Age must be at least 6
+        </mat-error>
+        <mat-error *ngIf="questionForm.get('ageSuitability')?.hasError('max')">
+          Age must be at most 12
+        </mat-error>
+      </mat-form-field>
+
       <div class="button-group">
         <button mat-raised-button color="primary" type="submit" [disabled]="!questionForm.valid">
           {{ isEditMode ? 'Update Question' : 'Create Question' }}

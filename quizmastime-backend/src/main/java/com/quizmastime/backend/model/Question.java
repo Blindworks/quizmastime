@@ -43,4 +43,10 @@ public class Question {
     @Max(value = 3, message = "Correct answer must be 1, 2, or 3")
     @Column(nullable = false)
     private Integer correctAnswer;
+
+    @NotNull(message = "Age suitability is required")
+    @Min(value = 6, message = "Age suitability must be between 6 and 12")
+    @Max(value = 12, message = "Age suitability must be between 6 and 12")
+    @Column(nullable = false)
+    private Integer ageSuitability;
 }
