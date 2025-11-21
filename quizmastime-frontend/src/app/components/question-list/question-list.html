@@ -36,6 +36,11 @@
         <td mat-cell *matCellDef="let question">{{getCorrectAnswerText(question)}}</td>
       </ng-container>
 
+      <ng-container matColumnDef="ageSuitability">
+        <th mat-header-cell *matHeaderCellDef>Age</th>
+        <td mat-cell *matCellDef="let question">{{question.ageSuitability}}+</td>
+      </ng-container>
+
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Actions</th>
         <td mat-cell *matCellDef="let question">

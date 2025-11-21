@@ -28,6 +28,7 @@ public class QuestionService {
                 .answer2(questionDTO.getAnswer2())
                 .answer3(questionDTO.getAnswer3())
                 .correctAnswer(questionDTO.getCorrectAnswer())
+                .ageSuitability(questionDTO.getAgeSuitability())
                 .build();
 
         Question savedQuestion = questionRepository.save(question);
@@ -63,6 +64,7 @@ public class QuestionService {
         question.setAnswer2(questionDTO.getAnswer2());
         question.setAnswer3(questionDTO.getAnswer3());
         question.setCorrectAnswer(questionDTO.getCorrectAnswer());
+        question.setAgeSuitability(questionDTO.getAgeSuitability());
 
         Question updatedQuestion = questionRepository.save(question);
         log.info("Question updated successfully with id: {}", updatedQuestion.getId());
@@ -90,6 +92,7 @@ public class QuestionService {
                 .answer2(question.getAnswer2())
                 .answer3(question.getAnswer3())
                 .correctAnswer(question.getCorrectAnswer())
+                .ageSuitability(question.getAgeSuitability())
                 .build();
     }
 }
