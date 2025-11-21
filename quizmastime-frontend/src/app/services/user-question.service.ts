@@ -20,6 +20,7 @@ export interface UserQuestion {
     answer2: string;
     answer3: string;
     correctAnswer: number;
+    ageSuitability: number;
   };
 }
 
