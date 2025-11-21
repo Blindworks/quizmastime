@@ -92,7 +92,8 @@ export class QuestionView implements OnInit {
               answer1: userQuestion.question.answer1,
               answer2: userQuestion.question.answer2,
               answer3: userQuestion.question.answer3,
-              correctAnswer: userQuestion.question.correctAnswer
+              correctAnswer: userQuestion.question.correctAnswer,
+              ageSuitability: userQuestion.question.ageSuitability
             };
             this.prepareAnswers();
             this.checkLockoutStatus();
