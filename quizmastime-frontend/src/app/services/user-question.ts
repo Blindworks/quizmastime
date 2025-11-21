@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UserQuestion } from '../models/user-question';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserQuestionService {
-  private apiUrl = 'http://localhost:8080/api/user-questions';
+  private apiUrl = `${environment.apiUrl}/user-questions`;
 
   constructor(private http: HttpClient) {}
 
