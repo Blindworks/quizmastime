@@ -24,6 +24,7 @@ import { HolidayPopupDialogComponent } from './components/holiday-popup-dialog/h
 export class App implements OnInit {
   protected readonly title = signal('quizmastime-frontend');
   isAdminRoute = signal(false);
+  private popupsChecked = false;
 
   constructor(
     private router: Router,
@@ -34,21 +35,35 @@ export class App implements OnInit {
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
       this.isAdminRoute.set(event.url.includes('/admin'));
+
+      // Show holiday popups when navigating to calendar or other user views (not admin)
+      if (!event.url.includes('/admin')) {
+        this.checkAndShowHolidayPopups();
+      }
     });
   }
 
   ngOnInit(): void {
+    // Initial check on app load
     this.checkAndShowHolidayPopups();
   }
 
   private checkAndShowHolidayPopups(): void {
+    // Avoid checking multiple times in the same session
+    if (this.popupsChecked) {
+      return;
+    }
+
     const today = new Date().toISOString().split('T')[0];
     const shownPopupsKey = `holiday-popups-shown-${today}`;
 
     const alreadyShown = localStorage.getItem(shownPopupsKey);
     if (alreadyShown) {
+      this.popupsChecked = true;
       return;
     }
+
+    this.popupsChecked = true;
 
     this.holidayPopupService.getTodaysPopups().subscribe({
       next: (popups) => {
