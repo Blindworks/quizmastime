@@ -1,0 +1,79 @@
+<!-- Admin Mode: Edit/Create Form -->
+<div *ngIf="isAdminMode">
+  <h2 mat-dialog-title>{{ isEditMode ? 'Holiday Popup bearbeiten' : 'Neues Holiday Popup erstellen' }}</h2>
+
+  <mat-dialog-content>
+    <form [formGroup]="popupForm">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Titel</mat-label>
+        <input matInput formControlName="title" required>
+        <mat-error *ngIf="popupForm.get('title')?.hasError('required')">
+          Titel ist erforderlich
+        </mat-error>
+        <mat-error *ngIf="popupForm.get('title')?.hasError('minlength')">
+          Titel muss mindestens 2 Zeichen lang sein
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Nachricht</mat-label>
+        <textarea matInput formControlName="message" rows="6" required></textarea>
+        <mat-error *ngIf="popupForm.get('message')?.hasError('required')">
+          Nachricht ist erforderlich
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Datum</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="popupDate" required>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="popupForm.get('popupDate')?.hasError('required')">
+          Datum ist erforderlich
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Bild-URL</mat-label>
+        <input matInput formControlName="imageUrl">
+        <mat-hint>Optional: URL zu einem Bild für das Popup</mat-hint>
+      </mat-form-field>
+
+      <div class="checkbox-container">
+        <mat-checkbox formControlName="active" color="primary">
+          Popup aktiv
+        </mat-checkbox>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Abbrechen</button>
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!popupForm.valid">
+      {{ isEditMode ? 'Aktualisieren' : 'Erstellen' }}
+    </button>
+  </mat-dialog-actions>
+</div>
+
+<!-- Display Mode: Beautiful Holiday Popup -->
+<div *ngIf="!isAdminMode" class="holiday-popup-display">
+  <div class="popup-header">
+    <h1 class="popup-title">{{ data.popup?.title }}</h1>
+  </div>
+
+  <mat-dialog-content class="popup-content">
+    <div *ngIf="data.popup?.imageUrl" class="popup-image-container">
+      <img [src]="data.popup.imageUrl" [alt]="data.popup.title" class="popup-image">
+    </div>
+
+    <div class="popup-message">
+      {{ data.popup?.message }}
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="center">
+    <button mat-raised-button color="primary" (click)="onCancel()" class="close-button">
+      Schließen
+    </button>
+  </mat-dialog-actions>
+</div>
