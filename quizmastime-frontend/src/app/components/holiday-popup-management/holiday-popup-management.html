@@ -1,0 +1,51 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Holiday Popups</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="header-actions">
+      <button mat-raised-button color="primary" (click)="onCreatePopup()">
+        <mat-icon>add</mat-icon>
+        Neues Holiday Popup erstellen
+      </button>
+    </div>
+    <table mat-table [dataSource]="popups" class="mat-elevation-z8">
+
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef>Titel</th>
+        <td mat-cell *matCellDef="let popup">{{popup.title}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="popupDate">
+        <th mat-header-cell *matHeaderCellDef>Datum</th>
+        <td mat-cell *matCellDef="let popup">{{formatDate(popup.popupDate)}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="active">
+        <th mat-header-cell *matHeaderCellDef>Aktiv</th>
+        <td mat-cell *matCellDef="let popup">
+          <mat-slide-toggle
+            [checked]="popup.active"
+            (change)="toggleActive(popup)"
+            color="primary">
+          </mat-slide-toggle>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Aktionen</th>
+        <td mat-cell *matCellDef="let popup">
+          <button mat-icon-button color="primary" (click)="onEditPopup(popup)" matTooltip="Popup bearbeiten">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deletePopup(popup.id)" matTooltip="Popup löschen">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </mat-card-content>
+</mat-card>
