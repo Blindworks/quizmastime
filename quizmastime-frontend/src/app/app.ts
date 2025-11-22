@@ -49,29 +49,38 @@ export class App implements OnInit {
   }
 
   private checkAndShowHolidayPopups(): void {
+    console.log('[HolidayPopup] Checking for holiday popups...');
+
     // Avoid checking multiple times in the same session
     if (this.popupsChecked) {
+      console.log('[HolidayPopup] Already checked in this session, skipping');
       return;
     }
 
     const today = new Date().toISOString().split('T')[0];
     const shownPopupsKey = `holiday-popups-shown-${today}`;
+    console.log('[HolidayPopup] Today:', today);
 
     const alreadyShown = localStorage.getItem(shownPopupsKey);
     if (alreadyShown) {
+      console.log('[HolidayPopup] Popups already shown today, skipping');
       this.popupsChecked = true;
       return;
     }
 
-    this.popupsChecked = true;
-
+    console.log('[HolidayPopup] Fetching today\'s popups from API...');
     this.holidayPopupService.getTodaysPopups().subscribe({
       next: (popups) => {
+        console.log('[HolidayPopup] Received popups:', popups);
+
         if (popups && popups.length > 0) {
+          console.log(`[HolidayPopup] Found ${popups.length} popup(s) to display`);
+          this.popupsChecked = true;
           let currentIndex = 0;
 
           const showNextPopup = () => {
             if (currentIndex < popups.length) {
+              console.log(`[HolidayPopup] Showing popup ${currentIndex + 1}/${popups.length}:`, popups[currentIndex]);
               const dialogRef = this.dialog.open(HolidayPopupDialogComponent, {
                 width: '600px',
                 data: { popup: popups[currentIndex], isAdmin: false },
@@ -83,6 +92,7 @@ export class App implements OnInit {
                 if (currentIndex < popups.length) {
                   setTimeout(() => showNextPopup(), 300);
                 } else {
+                  console.log('[HolidayPopup] All popups shown, marking as displayed for today');
                   localStorage.setItem(shownPopupsKey, 'true');
                 }
               });
@@ -90,10 +100,20 @@ export class App implements OnInit {
           };
 
           setTimeout(() => showNextPopup(), 1000);
+        } else {
+          console.log('[HolidayPopup] No popups found for today');
+          this.popupsChecked = true;
         }
       },
       error: (error) => {
-        console.error('Error loading holiday popups:', error);
+        console.error('[HolidayPopup] Error loading holiday popups:', error);
+        console.error('[HolidayPopup] Full error details:', {
+          message: error.message,
+          status: error.status,
+          statusText: error.statusText,
+          url: error.url
+        });
+        // Don't set popupsChecked on error, allow retry on next navigation
       }
     });
   }
