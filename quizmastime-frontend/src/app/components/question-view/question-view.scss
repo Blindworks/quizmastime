@@ -483,10 +483,11 @@
   }
 
   .question-content {
-    padding: 0.75rem;
+    padding: 1rem;
     gap: 1.5rem;
     // Ensure content doesn't overflow
     max-width: 100%;
+    margin: 0;
     box-sizing: border-box;
   }
 
@@ -494,9 +495,12 @@
     // Reduce padding to prevent overflow
     padding: 0.75rem;
     border-radius: 16px;
+    width: 100%;
+    margin: 0;
 
     mat-card-content {
       padding: 1.25rem;
+      box-sizing: border-box;
     }
 
     .question-text {
@@ -515,6 +519,8 @@
   .answer-card {
     padding: 0.875rem;
     border-radius: 12px;
+    width: 100%;
+    margin: 0;
 
     .answer-content {
       gap: 0.75rem;
@@ -548,13 +554,17 @@
 
   .result-container {
     margin-top: 0.75rem;
+    width: 100%;
 
     .result-card {
       padding: 0.75rem;
       border-radius: 16px;
+      width: 100%;
+      margin: 0;
 
       mat-card-content {
         padding: 1.25rem;
+        box-sizing: border-box;
 
         .result-icon mat-icon {
           font-size: 3.5rem;
@@ -594,11 +604,14 @@
   }
 
   .error-container {
-    padding: 1rem;
+    padding: 0;
+    width: 100%;
 
     mat-card {
       padding: 1.5rem;
       max-width: 100%;
+      width: 100%;
+      margin: 0;
       box-sizing: border-box;
     }
   }
