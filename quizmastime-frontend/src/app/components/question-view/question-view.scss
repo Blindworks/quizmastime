@@ -464,6 +464,17 @@
     overflow-x: hidden;
   }
 
+  // Override Angular Material card margins and padding
+  mat-card {
+    margin: 0 !important;
+    width: 100%;
+  }
+
+  mat-card-content {
+    margin: 0 !important;
+    padding: 1.25rem !important;
+  }
+
   .question-header {
     padding: 1rem;
 
@@ -495,13 +506,6 @@
     // Reduce padding to prevent overflow
     padding: 0.75rem;
     border-radius: 16px;
-    width: 100%;
-    margin: 0;
-
-    mat-card-content {
-      padding: 1.25rem;
-      box-sizing: border-box;
-    }
 
     .question-text {
       font-size: 1.1rem;
@@ -559,14 +563,8 @@
     .result-card {
       padding: 0.75rem;
       border-radius: 16px;
-      width: 100%;
-      margin: 0;
 
-      mat-card-content {
-        padding: 1.25rem;
-        box-sizing: border-box;
-
-        .result-icon mat-icon {
+      .result-icon mat-icon {
           font-size: 3.5rem;
           width: 3.5rem;
           height: 3.5rem;
@@ -608,10 +606,7 @@
     width: 100%;
 
     mat-card {
-      padding: 1.5rem;
       max-width: 100%;
-      width: 100%;
-      margin: 0;
       box-sizing: border-box;
     }
   }
