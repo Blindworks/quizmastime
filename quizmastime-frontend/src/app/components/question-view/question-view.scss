@@ -157,6 +157,7 @@
   max-width: 900px;
   margin: 0 auto;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .question-card {
@@ -164,6 +165,7 @@
   border-radius: 24px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   padding: 1rem;
+  box-sizing: border-box;
 
   mat-card-content {
     text-align: center;
@@ -224,6 +226,7 @@
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   border: 3px solid transparent;
+  box-sizing: border-box;
 
   &:hover:not(.correct):not(.incorrect) {
     transform: translateY(-5px);
@@ -456,6 +459,11 @@
 
 // Mobile optimizations
 @media (max-width: 767px) {
+  .question-container {
+    // Ensure no horizontal overflow
+    overflow-x: hidden;
+  }
+
   .question-header {
     padding: 1rem;
 
@@ -475,25 +483,60 @@
   }
 
   .question-content {
-    padding: 1rem;
+    padding: 0.75rem;
+    gap: 1.5rem;
+    // Ensure content doesn't overflow
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .question-card {
+    // Reduce padding to prevent overflow
+    padding: 0.75rem;
+    border-radius: 16px;
+
+    mat-card-content {
+      padding: 1.25rem;
+    }
+
     .question-text {
-      font-size: 1.25rem;
+      font-size: 1.1rem;
+      margin: 0.75rem 0;
     }
 
     .question-icon mat-icon {
-      font-size: 3rem;
-      width: 3rem;
-      height: 3rem;
+      font-size: 2.5rem;
+      width: 2.5rem;
+      height: 2.5rem;
+      margin-bottom: 0.75rem;
     }
   }
 
   .answer-card {
-    padding: 1rem;
+    padding: 0.875rem;
+    border-radius: 12px;
 
-    .answer-content .answer-text {
+    .answer-content {
+      gap: 0.75rem;
+
+      .answer-text {
+        font-size: 0.95rem;
+        line-height: 1.4;
+      }
+
+      .answer-icon mat-icon {
+        font-size: 1.75rem;
+        width: 1.75rem;
+        height: 1.75rem;
+      }
+    }
+  }
+
+  .back-button-container {
+    margin-top: 0.75rem;
+
+    .back-to-calendar-button {
+      padding: 0.875rem 2rem;
       font-size: 1rem;
     }
   }
@@ -503,21 +546,60 @@
     font-size: 1rem;
   }
 
-  .result-container .result-card mat-card-content {
-    padding: 1.5rem;
+  .result-container {
+    margin-top: 0.75rem;
 
-    .result-icon mat-icon {
-      font-size: 4rem;
-      width: 4rem;
-      height: 4rem;
+    .result-card {
+      padding: 0.75rem;
+      border-radius: 16px;
+
+      mat-card-content {
+        padding: 1.25rem;
+
+        .result-icon mat-icon {
+          font-size: 3.5rem;
+          width: 3.5rem;
+          height: 3.5rem;
+          margin-bottom: 0.75rem;
+        }
+
+        h3 {
+          font-size: 1.35rem;
+          margin: 0.75rem 0;
+        }
+
+        p {
+          font-size: 0.95rem;
+          margin: 0.75rem 0 1.5rem 0;
+        }
+
+        .lockout-timer {
+          font-size: 1.25rem;
+          margin: 1rem 0;
+          padding: 0.75rem;
+
+          mat-icon {
+            font-size: 1.5rem;
+            width: 1.5rem;
+            height: 1.5rem;
+          }
+        }
+
+        .back-to-calendar-button {
+          padding: 0.875rem 2rem;
+          font-size: 1rem;
+        }
+      }
     }
+  }
 
-    h3 {
-      font-size: 1.5rem;
-    }
+  .error-container {
+    padding: 1rem;
 
-    p {
-      font-size: 1rem;
+    mat-card {
+      padding: 1.5rem;
+      max-width: 100%;
+      box-sizing: border-box;
     }
   }
 }
