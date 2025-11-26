@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UserService } from '../../services/user';
 import { User } from '../../models/user';
 
@@ -19,7 +20,8 @@ import { User } from '../../models/user';
     MatFormFieldModule,
     MatInputModule,
     MatCardModule,
-    MatSelectModule
+    MatSelectModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './player-selection.html',
   styleUrl: './player-selection.scss'
@@ -33,6 +35,8 @@ export class PlayerSelection implements OnInit {
   newUserEmail: string = '';
   isCreatingNewUser: boolean = false;
   imageLoadErrors: Set<number> = new Set();
+  isLoading: boolean = true;
+  loadError: boolean = false;
 
   constructor(
     private userService: UserService,
@@ -44,13 +48,18 @@ export class PlayerSelection implements OnInit {
   }
 
   loadUsers(): void {
+    this.isLoading = true;
+    this.loadError = false;
     this.userService.getAllUsers().subscribe({
       next: (users) => {
         this.users = users;
+        this.isLoading = false;
       },
       error: (error) => {
         console.error('Fehler beim Laden der Benutzer:', error);
         this.users = [];
+        this.isLoading = false;
+        this.loadError = true;
       }
     });
   }
